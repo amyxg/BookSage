@@ -1,28 +1,10 @@
-import sqlite3
+import sqlite3 , models
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
-# Function to create the database and user table if they don't exist
-def init_db():
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            first_name TEXT NOT NULL,
-            last_name TEXT NOT NULL,
-            email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
-# Initialize the database
-init_db()
 
 # Home route (mainPage)
 @app.route('/')
@@ -42,9 +24,10 @@ def login():
         conn.close()
         if user and check_password_hash(user[4], password):
             session['user_id'] = user[0]
-            return redirect(url_for('profile'))
+            return redirect(url_for('dashboard'))
         else:
             flash('Invalid credentials')
+            return redirect(url_for('login'))
     return render_template('login.html')
 
 # Register route
@@ -68,10 +51,12 @@ def register():
                 return redirect(url_for('login'))
             except sqlite3.IntegrityError:
                 flash('Email already exists.')
+                return redirect(url_for('register'))
             finally:
                 conn.close()
         else:
             flash('Passwords do not match.')
+            return redirect(url_for('register'))
     return render_template('register.html')
 
 # Profile route
@@ -86,6 +71,18 @@ def profile():
     conn.close()
     return render_template('profile.html', user=user)
 
+# dashboard route
+@app.route('/dashboard')
+def dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT first_name, last_name, email FROM users WHERE id = ?", (session['user_id'],))
+    user = c.fetchone()
+    conn.close()
+    #return redirect(url_for('index'))  # Redirects to the home page
+    return render_template('dashboard.html', user=user)
 # Logout route
 @app.route('/logout')
 def logout():

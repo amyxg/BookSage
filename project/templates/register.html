@@ -7,6 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
+    
     <div class="container mx-auto mt-10 p-5">
         <h2 class="text-3xl font-bold mb-5">BookSage- Register</h2>
 
@@ -19,7 +20,19 @@
                 <input type="password" name="confirm_password" placeholder="Confirm Password" class="mb-4 p-2 w-full border rounded">
                 <button type="submit" name="register" class="bg-blue-500 text-white py-2 px-4 rounded w-full">Register</button>
             </form>
+            <p class="mt-4"></p>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+               <ul class="flashes">
+                {% for message in messages %}
+                 <li>{{ message }}</li>
+              {% endfor %}
+           </ul>
+         {% endif %}
+       {% endwith %}
+
             <p class="mt-4">Already have an account? <a href="{{ url_for('login') }}" class="text-blue-600">Login here</a></p>
+            <p class="mt-4">Go Back to Home Page - <a href="{{ url_for('index') }}" class="text-blue-600">Home Page</a></p>
         </div>
     </div>
 </body>
