@@ -14,6 +14,15 @@ def init_db():
             is_new_user BOOLEAN DEFAULT 1 
         )
     ''')
+    # Create survey table
+    c.execute('''CREATE TABLE IF NOT EXISTS survey (
+        user_id INTEGER PRIMARY KEY,
+        favorite_genres TEXT,
+        favorite_authors TEXT,
+        fiction_or_nonfiction TEXT,
+        other_preferences TEXT,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    )''')
     conn.commit()
     conn.close()
 

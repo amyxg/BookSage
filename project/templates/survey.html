@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-6">
+        <h1 class="text-3xl font-bold text-center mb-6">Book Preference Survey</h1>
+        
+        <form action="{{ url_for('survey') }}" method="POST" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+            <label class="block mb-2">Favorite Genres:</label>
+            <input type="text" name="favorite_genres" required class="w-full p-2 border rounded">
+            
+            <label class="block mt-4 mb-2">Favorite Authors:</label>
+            <input type="text" name="favorite_authors" required class="w-full p-2 border rounded">
+
+            <label class="block mt-4 mb-2">Do you prefer Fiction or Nonfiction?</label>
+            <select name="fiction_or_nonfiction" class="w-full p-2 border rounded">
+                <option value="Fiction">Fiction</option>
+                <option value="Nonfiction">Nonfiction</option>
+            </select>
+
+            <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

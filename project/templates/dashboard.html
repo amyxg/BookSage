@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var hasCompletedSurvey = "{{ has_completed_survey | lower }}" === "true";
+            if (!hasCompletedSurvey) {
+                alert("Complete the survey to get book recommendations!");
+                window.location.href = "{{ url_for('survey') }}";
+            }
+        });
+    </script>
+    
+    
 </head>
 <body class="bg-gray-50">
     <!-- Header -->
