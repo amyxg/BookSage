@@ -1,6 +1,6 @@
-# CampusReads
+# BookSage 
 
-CampusReads is a platform that provides personalized book recommendations based on users' preferred genres, popular content, and highly rated titles by fellow readers.
+BookSage is a platform that provides personalized book recommendations based on users' preferred genres, popular content, and highly rated titles by fellow readers.
 
 ## Features
 
