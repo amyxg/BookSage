@@ -1,4 +1,4 @@
-import sqlite3 , models
+import sqlite3 , models, books as bk
 from flask import Flask, render_template, request, redirect, url_for, flash, session # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
@@ -71,6 +71,7 @@ def survey():
 
     conn.close()
     return render_template('survey.html')
+
 # Register route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -136,6 +137,18 @@ def dashboard():
     has_completed_survey = survey_data is not None  # True if survey exists, False otherwise
 
     return render_template('dashboard.html', user=user, has_completed_survey=has_completed_survey)
+
+# display all books in database
+@app.route('/books')
+def all_books():
+    # connect to books database (Books table)
+    db = bk.db_connection()
+    # query Books table to display info on books
+    books = bk.query_table()
+
+    # return render_template()
+    # (put HTML link in parentheses above & books = books)
+
 # Logout route
 @app.route('/logout')
 def logout():
