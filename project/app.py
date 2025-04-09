@@ -147,7 +147,7 @@ def all_books():
     books = bk.query_table()
 
     # return render_template()
-    # (put HTML link in parentheses above & books = books)
+    # TODO: (put HTML link in parentheses above & books = books)
 
 # Logout route
 @app.route('/logout')
