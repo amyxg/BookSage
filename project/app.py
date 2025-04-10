@@ -1,4 +1,4 @@
-import sqlite3 , models, books as bk
+import sqlite3 , books as bk
 from flask import Flask, render_template, request, redirect, url_for, flash, session # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
@@ -146,7 +146,7 @@ def all_books():
     # query Books table to display info on books
     books = bk.query_table()
 
-    # return render_template()
+    return render_template()
     # TODO: (put HTML link in parentheses above & books = books)
 
 # Logout route
