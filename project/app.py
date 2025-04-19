@@ -142,13 +142,18 @@ def dashboard():
 # display all books in database
 @app.route('/books')
 def all_books():
+    # make sure user is logged in first
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    # Note db is not being used, so should I take out "db = "?
     # connect to books database (Books table)
     db = bk.db_connection()
     # query Books table to display info on books
     books = bk.query_table().fetchall()     #added fetchall() to see all books
 
     return render_template('allbooks.html', books = books)
-    # TODO: (put HTML link in parentheses above & books = books)
+    
     
 
 # Logout route
