@@ -1,4 +1,5 @@
 import sqlite3 , books as bk
+# Note: Took out models - need to add it back in?
 from flask import Flask, render_template, request, redirect, url_for, flash, session # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
@@ -144,10 +145,11 @@ def all_books():
     # connect to books database (Books table)
     db = bk.db_connection()
     # query Books table to display info on books
-    books = bk.query_table()
+    books = bk.query_table().fetchall()     #added fetchall() to see all books
 
-    return render_template()
+    return render_template('allbooks.html', books = books)
     # TODO: (put HTML link in parentheses above & books = books)
+    
 
 # Logout route
 @app.route('/logout')
