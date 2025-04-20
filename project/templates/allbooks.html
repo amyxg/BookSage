@@ -1,28 +1,32 @@
 {% extends 'dashboard.html' %}
 
-{% block header %}
-  <h1>{% block title %}Books{% endblock %}</h1>
-  {% if g.user %}
-    <a class="action" href="{{ url_for('dashboard') }}">New</a>
-  {% endif %}
-{% endblock %}
+{% block title %}All Books{% endblock %}
 
 {% block content %}
-  {% for book in books %}
-    <article class="post">
-      <header>
-        <div>
-          <h1>{{ book['title'] }}</h1>
-          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
-        </div>
-        {% if g.user['id'] == post['author_id'] %}
-          <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
-        {% endif %}
-      </header>
-      <p class="body">{{ post['body'] }}</p>
-    </article>
-    {% if not loop.last %} <!--Probably will take out this line-->
-      <hr>
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold">All Books</h2>
+      {% if g.user %}
+        <a href="{{ url_for('add_book') }}"
+           class="bg-white text-blue-600 px-4 py-2 rounded-lg shadow hover:bg-blue-50">
+          + Add Book
+        </a>
+      {% endif %}
+    </div>
+
+    {% if not books %}
+      <p class="text-gray-600">No books found in the database.</p>
+    {% else %}
+      <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {% for book in books %}
+          <div class="bg-white shadow-lg rounded-2xl p-6">
+            <h3 class="text-xl font-semibold mb-2">{{ book['Title'] }}</h3>
+            <p class="text-gray-700"><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
+            <p class="text-gray-700"><strong>Published:</strong> {{ book['PubDate'] }}</p>
+            <p class="text-gray-700"><strong>Genre:</strong> {{ book['Genre'] }}</p>
+          </div>
+        {% endfor %}
+      </div>
     {% endif %}
-  {% endfor %}
+  </div>
 {% endblock %}

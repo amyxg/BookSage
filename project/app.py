@@ -140,7 +140,7 @@ def dashboard():
     return render_template('dashboard.html', user=user, has_completed_survey=has_completed_survey)
 
 # display all books in database
-@app.route('/books')
+@app.route('/allbooks')
 def all_books():
     # make sure user is logged in first
     if 'user_id' not in session:
@@ -150,7 +150,7 @@ def all_books():
     # connect to books database (Books table)
     db = bk.db_connection()
     # query Books table to display info on books
-    books = bk.query_table().fetchall()     #added fetchall() to see all books
+    books = bk.query_table(db)
 
     return render_template('allbooks.html', books = books)
     
