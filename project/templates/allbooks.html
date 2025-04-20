@@ -1,3 +1,4 @@
+<!-- All Books Page -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,10 +21,10 @@
           <a href="{{ url_for('survey') }}" class="hover:text-blue-200">Survey</a>
         </nav>
         <div class="flex items-center space-x-4">
-          <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
           <a href="{{ url_for('dashboard') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Dashboard</a>
           <a href="{{ url_for('all_books') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">All Books</a>
           <a href="{{ url_for('survey') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Survey</a>
+          <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
         </div>
       </div>
     </div>
@@ -33,7 +34,7 @@
   <section class="bg-blue-700 text-white py-16">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mx-auto text-center">
-        <h2 class="text-4xl font-bold mb-4">Welcome, {{ user[0] }} {{ user[1] }}</h2>
+        <h2 class="text-4xl font-bold mb-4">Welcome, {{ user[0] }} {{ user[1] }}!</h2>
         <p class="text-xl mb-4">Email: {{ user[2] }}</p>
         <p class="text-lg">Here are all the books in the BookSage library:</p>
       </div>
@@ -51,7 +52,7 @@
             <div class="bg-white shadow-lg rounded-2xl p-6">
               <h3 class="text-xl font-semibold mb-2">{{ book['Title'] }}</h3>
               <p class="text-gray-700"><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
-              <p class="text-gray-700"><strong>Published:</strong> {{ book['PubDate'] }}</p>
+              <p class="text-gray-700"><strong>Published:</strong> {{ book['Pubdate'] }}</p>
               <p class="text-gray-700"><strong>Genre:</strong> {{ book['Genre'] }}</p>
             </div>
           {% endfor %}

@@ -28,6 +28,7 @@ def query_table(connection):
         
         # execute SQL command to get books
         cursor.execute('SELECT ISBN, Title, PubDate, Genre FROM Books')
+        
 
         
         # get results
