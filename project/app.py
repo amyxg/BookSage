@@ -1,4 +1,4 @@
-import sqlite3 , books as bk
+import sqlite3 , books as bk, models
 # Note: Took out models - need to add it back in?
 from flask import Flask, render_template, request, redirect, url_for, flash, session # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
@@ -146,8 +146,7 @@ def all_books():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
-    # Note db is not being used, so should I take out "db = "?
-    # connect to books database (Books table)
+    # connect to books database
     db = bk.db_connection()
     # query Books table to display info on books
     books = bk.query_table(db)
