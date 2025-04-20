@@ -1,6 +1,6 @@
-import sqlite3 , books as bk, models
+import sqlite3 , books as bk
 # Note: Took out models - need to add it back in?
-from flask import Flask, render_template, request, redirect, url_for, flash, session # type: ignore
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
 app = Flask(__name__)
@@ -143,15 +143,20 @@ def dashboard():
 @app.route('/allbooks')
 def all_books():
     # make sure user is logged in first
+
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
-    # connect to books database
-    db = bk.db_connection()
+    if 'db' not in g:
+        # connect to books database
+        db = bk.db_connection()
     # query Books table to display info on books
     books = bk.query_table(db)
 
-    return render_template('allbooks.html', books = books)
+    # store user info in session (or fetch from DB?)
+    user = session.get('user')
+
+    return render_template('allbooks.html', books = books, user = user)
     
     
 

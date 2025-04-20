@@ -1,5 +1,5 @@
 import sqlite3 as db
-# from flask import g     # need to import flask in this file?
+# from flask import flask, g     # need to import flask in this file?
 
 # Connects to Books Database
 
