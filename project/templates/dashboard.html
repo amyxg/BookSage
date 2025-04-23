@@ -1,10 +1,9 @@
-<!-- dashboard page-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>BookSage Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -15,8 +14,6 @@
             }
         });
     </script>
-    
-    
 </head>
 <body class="bg-gray-50">
     <!-- Header -->
@@ -33,18 +30,27 @@
                 <div class="flex items-center space-x-4">
                     <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
                     <a href="{{ url_for('profile') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">{{ user[0] }}</a>
-                    
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Survey Completion Message -->
+    {% if has_completed_survey %}
+    <div class="alert bg-blue-100 p-4 rounded-lg mt-6">
+        <p>You've completed the survey! <a href="{{ url_for('survey_review') }}" class="text-blue-600 underline">Click here to review your answers.</a></p>
+    </div>
+    {% else %}
+    <div class="alert bg-yellow-200 p-4 rounded-lg mt-6">
+        <p>You haven't completed the survey yet. <a href="{{ url_for('survey') }}" class="text-blue-600 underline">Click here to take the survey.</a></p>
+    </div>
+    {% endif %}
 
     <!-- Profile Section -->
     <section class="bg-blue-700 text-white py-16">
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
                 <h2 class="text-4xl font-bold mb-4">Welcome, {{ user[0] }} {{ user[1] }}</h2>
-                
                 <p class="text-lg">Explore your book recommendations and community activities!</p>
             </div>
         </div>

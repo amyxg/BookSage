@@ -32,45 +32,72 @@ def login():
 # Survey route <!--that was added or modify-->
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))  # Ensure user is logged in
-
-    user_id = session['user_id']
-
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    
-    # Check if the user already completed the survey
-    c.execute("SELECT * FROM survey WHERE user_id = ?", (user_id,))
-    existing_survey = c.fetchone()
-    
     if request.method == 'POST':
-        favorite_genres = request.form['favorite_genres']
-        favorite_authors = request.form['favorite_authors']
-        fiction_or_nonfiction = request.form['fiction_or_nonfiction']
-        
-        if existing_survey:
-            # Update existing survey
-            c.execute('''
-                UPDATE survey 
-                SET favorite_genres = ?, favorite_authors = ?, fiction_or_nonfiction = ?
-                WHERE user_id = ?
-            ''', (favorite_genres, favorite_authors, fiction_or_nonfiction, user_id))
-        else:
-            # Insert new survey data
-            c.execute('''
-                INSERT INTO survey (user_id, favorite_genres, favorite_authors, fiction_or_nonfiction)
-                VALUES (?, ?, ?, ?)
-            ''', (user_id, favorite_genres, favorite_authors, fiction_or_nonfiction))
-        
+        # Retrieve the form data from the survey
+        reading_frequency = request.form.get('reading_frequency')
+        book_preference = request.form.get('book_preference')
+        discover_method = request.form.get('discover_method')
+        genres = request.form.getlist('genres')
+        fiction_non_fiction = request.form.get('fiction_non_fiction')
+        explore_genres = request.form.get('explore_genres')
+        tone = request.form.get('tone')
+        themes = request.form.getlist('themes')
+        book_length = request.form.get('book_length')
+        book_era = request.form.get('book_era')
+        narrative_perspective = request.form.get('narrative_perspective')
+        favorite_authors = request.form.get('favorite_authors')
+        top_books = request.form.get('top_books')
+        reading_purpose = request.form.get('reading_purpose')
+        thought_provoking = request.form.get('thought_provoking')
+
+        # Connect to the database and save the responses
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO survey_responses (
+                user_id, reading_frequency, book_preference, discover_method, genres,
+                fiction_non_fiction, explore_genres, tone, themes, book_length, book_era,
+                narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            session['user_id'], reading_frequency, book_preference, discover_method, ', '.join(genres),
+            fiction_non_fiction, explore_genres, tone, ', '.join(themes), book_length, book_era,
+            narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
+        ))
         conn.commit()
         conn.close()
 
-        flash("Survey completed! Your dashboard has been updated.")
+        # Update the user table to mark that the survey is completed
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute('UPDATE users SET has_completed_survey = 1 WHERE id = ?', (session['user_id'],))
+        conn.commit()
+        conn.close()
+
+        # Redirect to the dashboard
+        flash("Survey completed successfully! You can review your answers on your dashboard.", "success")
         return redirect(url_for('dashboard'))
 
-    conn.close()
     return render_template('survey.html')
+
+@app.route('/survey_review')
+def survey_review():
+    # Assuming you're logged in and have a user_id available
+    user_id = session['user_id']  # Replace with actual method to get the user_id
+    
+    # Fetch the survey responses for the current user
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row  # This allows us to access columns by name
+    cursor = conn.cursor()
+
+    # Query to get the user's survey responses
+    cursor.execute("SELECT * FROM survey_responses WHERE user_id = ?", (user_id,))
+    survey_responses = cursor.fetchone()
+
+    conn.close()
+
+    return render_template('survey_review.html', survey_responses=survey_responses)
+
 # Register route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -116,26 +143,36 @@ def profile():
 #<!--that was added or modify-->
 @app.route('/dashboard')
 def dashboard():
-    if 'user_id' not in session:
+    # Retrieve the user id from the session
+    user_id = session.get('user_id')
+    if not user_id:
         return redirect(url_for('login'))
-    
-    user_id = session['user_id']
+
+    # Fetch the user details from the database
     conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-
-    # Get user data
-    c.execute("SELECT first_name, last_name FROM users WHERE id = ?", (user_id,))
-    user = c.fetchone()
-
-    # Check if the survey is completed
-    c.execute("SELECT * FROM survey WHERE user_id = ?", (user_id,))
-    survey_data = c.fetchone()
-    
+    cursor = conn.cursor()
+    cursor.execute('SELECT first_name, last_name FROM users WHERE id = ?', (user_id,))
+    user = cursor.fetchone()
     conn.close()
 
-    has_completed_survey = survey_data is not None  # True if survey exists, False otherwise
+    # Check if the user exists
+    if not user:
+        return redirect(url_for('login'))
 
+    # Check if the user has completed the survey
+    has_completed_survey = check_if_completed_survey(user_id)
+
+    # Render the dashboard page with the user details and survey status
     return render_template('dashboard.html', user=user, has_completed_survey=has_completed_survey)
+
+def check_if_completed_survey(user_id):
+    # Check if the user has completed the survey
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT has_completed_survey FROM users WHERE id = ?', (user_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result[0] == 1  # Assuming 1 means the survey is completed
 # Logout route
 @app.route('/logout')
 def logout():
