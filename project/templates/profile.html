@@ -12,15 +12,19 @@
     <header class="bg-blue-600 text-white shadow-lg">
         <div class="container mx-auto px-4 py-6">
             <div class="flex justify-between items-center">
-                <h1 class="text-3xl font-bold">CampusReads</h1>
+                <h1 class="text-3xl font-bold">BookSage</h1>
                 <nav class="hidden md:flex space-x-6">
-                    <a href="#" class="hover:text-blue-200">Home</a>
+                    <!--a href="#" class="hover:text-blue-200">Home</a>-->
+                    <a href="{{ url_for('index') }}" class="hover:text-blue-200">Home</a> <!--that was added or modify-->
                     <a href="#" class="hover:text-blue-200">Browse</a>
                     <a href="#" class="hover:text-blue-200">My Books</a>
                     <a href="#" class="hover:text-blue-200">Community</a>
+                    <a href="{{ url_for('survey') }}" class="hover:text-blue-200">Survey</a> <!--that was added or modify-->
                 </nav>
                 <div class="flex items-center space-x-4">
                     <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
+                    <a href="{{ url_for('dashboard') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Dashboard</a>
+                    <a href="{{ url_for('survey') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Survey</a><!--that was added or modify-->
                 </div>
             </div>
         </div>
@@ -32,7 +36,7 @@
             <div class="max-w-2xl mx-auto text-center">
                 <h2 class="text-4xl font-bold mb-4">Welcome, {{ user[0] }} {{ user[1] }}</h2>
                 <p class="text-xl mb-4">Email: {{ user[2] }}</p>
-                <p class="text-lg">Explore your book recommendations and community activities!</p>
+                <p class="text-lg">User Profile</p>
             </div>
         </div>
     </section>

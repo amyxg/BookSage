@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Review</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">BookSage - Survey Review</h1>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
+                    <a href="{{ url_for('profile') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Profile</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Survey Review Section -->
+    <section class="bg-white p-8 my-6 rounded-lg shadow-lg max-w-3xl mx-auto">
+        <h2 class="text-2xl font-bold mb-4">Your Survey Answers</h2>
+        
+        <!-- Display Survey Answers -->
+        <div>
+            <h3 class="text-xl font-semibold">Reading Habits</h3>
+            <p><strong>How often do you read books?</strong> {{ survey_responses['reading_frequency'] or 'No response' }}</p>
+            <p><strong>Preferred format of books:</strong> {{ survey_responses['book_preference'] or 'No response' }}</p>
+            <p><strong>How do you typically discover new books?</strong> {{ survey_responses['discover_method'] or 'No response' }}</p>
+        </div>
+
+        <div class="mt-6">
+            <h3 class="text-xl font-semibold">Genre Preferences</h3>
+            <p><strong>Genres you enjoy:</strong> {{ survey_responses['genres'] or 'No response' }}</p>
+            <p><strong>Fiction or non-fiction:</strong> {{ survey_responses['fiction_non_fiction'] or 'No response' }}</p>
+            <p><strong>Interested in exploring other genres:</strong> {{ survey_responses['explore_genres'] or 'No response' }}</p>
+        </div>
+
+        <div class="mt-6">
+            <h3 class="text-xl font-semibold">Content Preferences</h3>
+            <!--<p><strong>Preferred book format:</strong> {{ survey_responses['preferred_format'] or 'No response' }}</p>-->
+            <p><strong>Preferred tone of books:</strong> {{ survey_responses['tone'] or 'No response' }}</p>
+            <p><strong>Themes that resonate with you:</strong> {{ survey_responses['themes'] or 'No response' }}</p>
+            <p><strong>Preferred book length:</strong> {{ survey_responses['book_length'] or 'No response' }}</p>
+            <p><strong>Preferred era in books:</strong> {{ survey_responses['book_era'] or 'No response' }}</p>
+            <p><strong>Preferred narrative perspective:</strong> {{ survey_responses['narrative_perspective'] or 'No response' }}</p>
+        </div>
+
+        <div class="mt-6">
+            <h3 class="text-xl font-semibold">Author Engagement</h3>
+            <p><strong>Your favorite authors:</strong> {{ survey_responses['favorite_authors'] or 'No response' }}</p>
+            <p><strong>Your top 3 favorite books:</strong> {{ survey_responses['top_books'] or 'No response' }}</p>
+        </div>
+
+        <div class="mt-6">
+            <h3 class="text-xl font-semibold">Reading Purpose</h3>
+            <p><strong>Why do you read?</strong> {{ survey_responses['reading_purpose'] or 'No response' }}</p>
+            <p><strong>Do you prefer thought-provoking or light reads?</strong> {{ survey_responses['thought_provoking'] or 'No response' }}</p>
+        </div>
+    </section>
+</body>
+</html>

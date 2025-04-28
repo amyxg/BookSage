@@ -1,35 +1,38 @@
-<!-- Auth page for login/registration-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication</title>
+    <title>Register - BookSage</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
+    
     <div class="container mx-auto mt-10 p-5">
-        <h2 class="text-3xl font-bold mb-5">CampusReads - Login or Register</h2>
+        <h2 class="text-3xl font-bold mb-5">BookSage- Register</h2>
 
         <div class="bg-white p-6 rounded shadow-md w-full max-w-md mx-auto">
             <form method="POST">
-                <h3 class="text-2xl font-semibold mb-4">Login</h3>
-                <input type="email" name="email" placeholder="Email" class="mb-4 p-2 w-full border rounded">
-                <input type="password" name="password" placeholder="Password" class="mb-4 p-2 w-full border rounded">
-                <button type="submit" name="login" class="bg-blue-500 text-white py-2 px-4 rounded w-full">Login</button>
-            </form>
-        </div>
-
-        <div class="bg-white p-6 rounded shadow-md w-full max-w-md mx-auto mt-6">
-            <form method="POST">
-                <h3 class="text-2xl font-semibold mb-4">Register</h3>
                 <input type="text" name="first_name" placeholder="First Name" class="mb-4 p-2 w-full border rounded">
                 <input type="text" name="last_name" placeholder="Last Name" class="mb-4 p-2 w-full border rounded">
                 <input type="email" name="email" placeholder="Email" class="mb-4 p-2 w-full border rounded">
                 <input type="password" name="password" placeholder="Password" class="mb-4 p-2 w-full border rounded">
                 <input type="password" name="confirm_password" placeholder="Confirm Password" class="mb-4 p-2 w-full border rounded">
-                <button type="submit" name="register" class="bg-green-500 text-white py-2 px-4 rounded w-full">Register</button>
+                <button type="submit" name="register" class="bg-blue-500 text-white py-2 px-4 rounded w-full">Register</button>
             </form>
+            <p class="mt-4"></p>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+               <ul class="flashes">
+                {% for message in messages %}
+                 <li>{{ message }}</li>
+              {% endfor %}
+           </ul>
+         {% endif %}
+       {% endwith %}
+
+            <p class="mt-4">Already have an account? <a href="{{ url_for('login') }}" class="text-blue-600">Login here</a></p>
+            <p class="mt-4">Go Back to Home Page - <a href="{{ url_for('index') }}" class="text-blue-600">Home Page</a></p>
         </div>
     </div>
 </body>
