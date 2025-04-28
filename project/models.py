@@ -39,5 +39,6 @@ def init_db():
     conn.close()
 
 # Initialize the database
-init_db()
 
+if __name__ == "__main__":
+    init_db()

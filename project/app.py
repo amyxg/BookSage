@@ -1,5 +1,6 @@
-import sqlite3 , models
-from flask import Flask, render_template, request, redirect, url_for, flash, session # type: ignore
+import sqlite3 , books as bk
+# Note: Took out models - need to add it back in?
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
 app = Flask(__name__)
@@ -80,6 +81,7 @@ def survey():
 
     return render_template('survey.html')
 
+
 @app.route('/survey_review')
 def survey_review():
     # Assuming you're logged in and have a user_id available
@@ -97,6 +99,7 @@ def survey_review():
     conn.close()
 
     return render_template('survey_review.html', survey_responses=survey_responses)
+
 
 # Register route
 @app.route('/register', methods=['GET', 'POST'])
@@ -165,6 +168,29 @@ def dashboard():
     # Render the dashboard page with the user details and survey status
     return render_template('dashboard.html', user=user, has_completed_survey=has_completed_survey)
 
+
+# display all books in database
+@app.route('/allbooks')
+def all_books():
+    # make sure user is logged in first
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    if 'db' not in g:
+        # connect to books database
+        db = bk.db_connection()
+    # query Books table to display info on books
+    books = bk.query_table(db)
+
+    # store user info in session (or fetch from DB?)
+    user = session.get('user')
+
+    return render_template('allbooks.html', books = books, user = user)
+    
+    
+
+
 def check_if_completed_survey(user_id):
     # Check if the user has completed the survey
     conn = sqlite3.connect('database.db')
@@ -173,6 +199,7 @@ def check_if_completed_survey(user_id):
     result = cursor.fetchone()
     conn.close()
     return result[0] == 1  # Assuming 1 means the survey is completed
+
 # Logout route
 @app.route('/logout')
 def logout():

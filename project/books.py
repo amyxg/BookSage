@@ -1,4 +1,5 @@
 import sqlite3 as db
+# from flask import flask, g     # need to import flask in this file?
 
 # Connects to Books Database
 
@@ -9,6 +10,11 @@ def db_connection():
     try:
         # establish a Connection to a SQLite file, indicating the filename
         connection = db.connect('books.db')
+        # set the row factory to return dictionary objects
+        connection.row_factory = db.Row
+
+        return connection
+
     except Exception as e:
         print(e)
 
@@ -18,32 +24,34 @@ def query_table(connection):
     '''
     try:
         #cursor used to submit DB requests/get results
-        cursor = conn.cursor()
+        cursor = connection.cursor()
         
         # execute SQL command to get books
         cursor.execute('SELECT ISBN, Title, PubDate, Genre FROM Books')
+        
 
         
         # get results
         rows = cursor.fetchall()
         
-        #print header rows
-        for fieldinfo in cursor.description:
-            print(fieldinfo[0], end="|")
-        print()
-        
-        for row in rows:
-            print(row)
+        # convert rows to dictionaries
+        results = [dict(row) for row in rows]
+
+        print(results)      # can comment out, this just shows results are  
+                            # in a list of dictionaries
+
+        return results
         
         
     # exception handling errors
     except Exception as e:
         print(e)
+        return []       # empty list
         
     # end function by closing connection
     finally:
         cursor.close()
-        conn.close()
+        connection.close()
     
 # call functions   
 conn = db_connection()
