@@ -51,9 +51,17 @@
           {% for book in books %}
             <div class="bg-white shadow-lg rounded-2xl p-6">
               <h3 class="text-xl font-semibold mb-2">{{ book['Title'] }}</h3>
+              <p class="text-gray-700"><strong>Author:</strong> {{ book['FirstName'] }} {{ book['LastName'] }}</p>
               <p class="text-gray-700"><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
               <p class="text-gray-700"><strong>Published:</strong> {{ book['Pubdate'] }}</p>
               <p class="text-gray-700"><strong>Genre:</strong> {{ book['Genre'] }}</p>
+              <p class="text-gray-700"><strong>Fiction/Nonfiction:</strong> {{ book['Fiction_Nonfiction'] }}</p>
+              <p class="text-gray-700"><strong>Theme:</strong> {{ book['Theme'] }}</p>
+              <p class="text-gray-700"><strong>Tone:</strong> {{ book['Tone'] }}</p>
+              <p class="text-gray-700"><strong>Length:</strong> {{ book['Book_Length'] }}</p>
+              <p class="text-gray-700"><strong>Era:</strong> {{ book['Book_Era'] }}</p>
+              <p class="text-gray-700"><strong>Narrative Perspective:</strong> {{ book['Narrative_Perspective'] }}</p>
+              <p class="text-gray-700"><strong>Format:</strong> {{ book['Book_Preference'] }}</p>
             </div>
           {% endfor %}
         </div>

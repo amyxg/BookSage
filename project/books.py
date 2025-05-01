@@ -27,7 +27,29 @@ def query_table(connection):
         cursor = connection.cursor()
         
         # execute SQL command to get books
-        cursor.execute('SELECT ISBN, Title, PubDate, Genre FROM Books')
+        cursor.execute('''
+    SELECT 
+        Books.ISBN,
+        Books.Title,
+        Books.PubDate,
+        Books.Genre,
+        Books.Fiction_Nonfiction,
+        Books.Theme,
+        Books.Tone,
+        Books.Book_Length,
+        Books.Book_Era,
+        Books.Narrative_Perspective,
+        Books.Book_Preference,
+        Author.FirstName,
+        Author.LastName
+    FROM 
+        Books
+    JOIN 
+        BookAuthor ON Books.ISBN = BookAuthor.ISBN
+    JOIN 
+        Author ON BookAuthor.AuthorID = Author.AuthorID
+''')
+
         
 
         
@@ -37,7 +59,7 @@ def query_table(connection):
         # convert rows to dictionaries
         results = [dict(row) for row in rows]
 
-        # print(results)      # can comment out, this just shows results are  
+        print(results)      # can comment out, this just shows results are  
                             # in a list of dictionaries
 
         return results
