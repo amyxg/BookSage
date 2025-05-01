@@ -9,7 +9,7 @@ def db_connection():
     '''
     try:
         # establish a Connection to a SQLite file, indicating the filename
-        connection = db.connect('books.db')
+        connection = db.connect('bookSage.db')
         # set the row factory to return dictionary objects
         connection.row_factory = db.Row
 
@@ -37,7 +37,7 @@ def query_table(connection):
         # convert rows to dictionaries
         results = [dict(row) for row in rows]
 
-        print(results)      # can comment out, this just shows results are  
+        # print(results)      # can comment out, this just shows results are  
                             # in a list of dictionaries
 
         return results

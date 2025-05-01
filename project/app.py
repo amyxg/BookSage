@@ -18,7 +18,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('bookSage.db')
         c = conn.cursor()
         c.execute("SELECT * FROM users WHERE email = ?", (email,))
         user = c.fetchone()
@@ -52,7 +52,7 @@ def survey():
         thought_provoking = request.form.get('thought_provoking')
 
         # Connect to the database and save the responses
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('bookSage.db')
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO survey_responses (
@@ -69,7 +69,7 @@ def survey():
         conn.close()
 
         # Update the user table to mark that the survey is completed
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('bookSage.db')
         cursor = conn.cursor()
         cursor.execute('UPDATE users SET has_completed_survey = 1 WHERE id = ?', (session['user_id'],))
         conn.commit()
@@ -88,7 +88,7 @@ def survey_review():
     user_id = session['user_id']  # Replace with actual method to get the user_id
     
     # Fetch the survey responses for the current user
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     conn.row_factory = sqlite3.Row  # This allows us to access columns by name
     cursor = conn.cursor()
 
@@ -112,7 +112,7 @@ def register():
         confirm_password = request.form['confirm_password']
         if password == confirm_password:
             hashed_password = generate_password_hash(password, method='scrypt')
-            conn = sqlite3.connect('database.db')
+            conn = sqlite3.connect('bookSage.db')
             c = conn.cursor()
             try:
                 c.execute("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
@@ -135,7 +135,7 @@ def register():
 def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     c = conn.cursor()
     c.execute("SELECT first_name, last_name, email FROM users WHERE id = ?", (session['user_id'],))
     user = c.fetchone()
@@ -152,7 +152,7 @@ def dashboard():
         return redirect(url_for('login'))
 
     # Fetch the user details from the database
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     cursor = conn.cursor()
     cursor.execute('SELECT first_name, last_name FROM users WHERE id = ?', (user_id,))
     user = cursor.fetchone()
@@ -193,7 +193,7 @@ def all_books():
 
 def check_if_completed_survey(user_id):
     # Check if the user has completed the survey
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     cursor = conn.cursor()
     cursor.execute('SELECT has_completed_survey FROM users WHERE id = ?', (user_id,))
     result = cursor.fetchone()
