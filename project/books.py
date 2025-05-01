@@ -40,8 +40,8 @@ def query_table(connection):
         Books.Book_Era,
         Books.Narrative_Perspective,
         Books.Book_Preference,
-        Author.FirstName,
-        Author.LastName
+        Author.Firstname,
+        Author.Lastname
     FROM 
         Books
     JOIN 
