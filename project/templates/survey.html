@@ -13,6 +13,32 @@
         input.classList.toggle('hidden', !checkbox.checked);
     }
 </script>
+<script>
+    function validateSurveyForm() {
+        // Validate Genres
+        const genreChecked = document.querySelectorAll('input[name="genres"]:checked').length > 0;
+        if (!genreChecked) {
+            alert("Please select at least one genre.");
+            return false;
+        }
+
+        // Validate Themes
+        const themeChecked = document.querySelectorAll('input[name="themes"]:checked').length > 0;
+        if (!themeChecked) {
+            alert("Please select at least one theme.");
+            return false;
+        }
+
+        // Validate Tone
+        const toneChecked = document.querySelectorAll('input[name="tone"]:checked').length > 0;
+        if (!toneChecked) {
+            alert("Please select at least one tone.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 <body class="bg-gray-50">
     <!-- Header -->
@@ -30,7 +56,7 @@
 
     <!-- Centered Form Section -->
     <div class="flex justify-center py-10 px-4">
-        <form action="{{ url_for('survey') }}" method="POST" class="w-full max-w-3xl bg-white shadow-md rounded-lg p-8 space-y-4">
+        <form action="{{ url_for('survey') }}" method="POST" onsubmit="return validateSurveyForm()" class="w-full max-w-3xl bg-white shadow-md rounded-lg p-8 space-y-4">
             <h2 class="text-2xl font-semibold text-center mb-6">Reading Habits</h2>
 
             <label class="font-semibold text-gray-900">How often do you read books?</label><br>
@@ -91,13 +117,13 @@
             <input type="radio" name="explore_genres" value="Yes"> Yes
             <input type="radio" name="explore_genres" value="No"> No
             <br><br>
-            <!--
+
             <h2 class="text-2xl font-semibold text-center mb-4">Content Preferences</h2>
             <label class="font-semibold text-gray-900">Preferred book format:</label><br>
             <input type="checkbox" name="book_preference" value="Print"> Print
             <input type="checkbox" name="book_preference" value="E-book"> E-book
             <input type="checkbox" name="book_preference" value="Audiobook"> Audiobook
-            <br><br>-->
+            <br><br>
 
             <label class="font-semibold text-gray-900">Preferred tone of books:</label><br>
             <input type="checkbox" name="tone" value="Light-hearted"> Light-hearted
