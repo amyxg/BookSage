@@ -1,6 +1,6 @@
 import sqlite3 , books as bk
 # Note: Took out models - need to add it back in?
-from flask import Flask, render_template, request, redirect, url_for, flash, session, g # type: ignore
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g,jsonify # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
 app = Flask(__name__)
@@ -33,55 +33,89 @@ def login():
 # Survey route <!--that was added or modify-->
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Check if the user already submitted the survey
+    cursor.execute('SELECT * FROM survey_responses WHERE user_id = ?', (user_id,))
+    existing_response = cursor.fetchone()
+    conn.close()
+
     if request.method == 'POST':
         # Retrieve the form data from the survey
         reading_frequency = request.form.get('reading_frequency')
-        book_preference = request.form.get('book_preference')
-        discover_method = request.form.get('discover_method')
+        book_preference = request.form.getlist('book_preference')
+        discover_method = request.form.getlist('discover_method')
         genres = request.form.getlist('genres')
         fiction_non_fiction = request.form.get('fiction_non_fiction')
         explore_genres = request.form.get('explore_genres')
-        tone = request.form.get('tone')
+        tone = request.form.getlist('tone')
         themes = request.form.getlist('themes')
         book_length = request.form.get('book_length')
-        book_era = request.form.get('book_era')
+        book_era = request.form.getlist('book_era')
         narrative_perspective = request.form.get('narrative_perspective')
-        favorite_authors = request.form.get('favorite_authors')
-        top_books = request.form.get('top_books')
-        reading_purpose = request.form.get('reading_purpose')
+        favorite_authors = request.form.getlist('favorite_authors')
+        top_books = request.form.getlist('top_books')
+        reading_purpose = request.form.getlist('reading_purpose')
         thought_provoking = request.form.get('thought_provoking')
 
-        # Connect to the database and save the responses
+        # Format the multi-select fields as comma-separated strings
+        genres_str = ', '.join(genres)
+        themes_str = ', '.join(themes)
+        book_preference_str=', '.join(book_preference)
+        discover_method_str = ', '.join(discover_method)
+        tone_str =', '.join(tone)
+        book_era_str = ', '.join(book_era)
+        favorite_authors_str =', '.join(favorite_authors)
+        top_books_str =', '.join(top_books)
+        reading_purpose_str = ', '.join(reading_purpose)
+
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-        cursor.execute('''
-            INSERT INTO survey_responses (
-                user_id, reading_frequency, book_preference, discover_method, genres,
-                fiction_non_fiction, explore_genres, tone, themes, book_length, book_era,
+
+        if existing_response:
+            # Update existing survey response
+            cursor.execute('''
+                UPDATE survey_responses
+                SET reading_frequency = ?, book_preference = ?, discover_method = ?, genres = ?,
+                    fiction_non_fiction = ?, explore_genres = ?, tone = ?, themes = ?, book_length = ?,
+                    book_era = ?, narrative_perspective = ?, favorite_authors = ?, top_books = ?,
+                    reading_purpose = ?, thought_provoking = ?
+                WHERE user_id = ?
+            ''', (
+                reading_frequency,  book_preference_str, discover_method_str, genres_str,
+                fiction_non_fiction, explore_genres, tone_str, themes_str, book_length,
+                book_era_str, narrative_perspective, favorite_authors_str, top_books_str,
+                reading_purpose_str, thought_provoking, user_id
+            ))
+        else:
+            # Insert new survey response
+            cursor.execute('''
+                INSERT INTO survey_responses (
+                    user_id, reading_frequency, book_preference, discover_method, genres,
+                    fiction_non_fiction, explore_genres, tone, themes, book_length, book_era,
+                    narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                user_id, reading_frequency, book_preference, discover_method, genres_str,
+                fiction_non_fiction, explore_genres, tone, themes_str, book_length, book_era,
                 narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            session['user_id'], reading_frequency, book_preference, discover_method, ', '.join(genres),
-            fiction_non_fiction, explore_genres, tone, ', '.join(themes), book_length, book_era,
-            narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
-        ))
+            ))
+
+        # Mark user as completed survey
+        cursor.execute('UPDATE users SET has_completed_survey = 1 WHERE id = ?', (user_id,))
         conn.commit()
         conn.close()
 
-        # Update the user table to mark that the survey is completed
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        cursor.execute('UPDATE users SET has_completed_survey = 1 WHERE id = ?', (session['user_id'],))
-        conn.commit()
-        conn.close()
-
-        # Redirect to the dashboard
-        flash("Survey completed successfully! You can review your answers on your dashboard.", "success")
+        flash("Survey submitted successfully! You can review or update your answers on your dashboard.", "success")
         return redirect(url_for('dashboard'))
 
     return render_template('survey.html')
-
-
+        
 @app.route('/survey_review')
 def survey_review():
     # Assuming you're logged in and have a user_id available
@@ -199,6 +233,47 @@ def check_if_completed_survey(user_id):
     result = cursor.fetchone()
     conn.close()
     return result[0] == 1  # Assuming 1 means the survey is completed
+@app.route('/recommendations')
+def recommendations():
+    if 'user_id' not in session:
+        return jsonify({'message': 'User not logged in'}), 401
+
+    user_id = session['user_id']
+
+    try:
+        # Get user's selected genres from database.db
+        conn_user = sqlite3.connect('database.db')
+        user_cursor = conn_user.cursor()
+        user_cursor.execute("SELECT genres FROM survey_responses WHERE user_id = ?", (user_id,))
+        row = user_cursor.fetchone()
+        conn_user.close()
+
+        if not row or not row[0]:
+            return jsonify({'message': 'No survey found or no genres selected.'})
+
+        genres = [g.strip() for g in row[0].split(',')]
+
+        # Get matching books from books.db
+        conn_books = sqlite3.connect('books.db')
+        books_cursor = conn_books.cursor()
+        placeholders = ','.join('?' for _ in genres)
+        query = f"SELECT Title, ISBN, Pubdate, Genre FROM books WHERE Genre IN ({placeholders})"
+        books_cursor.execute(query, genres)
+        books = books_cursor.fetchall()
+        conn_books.close()
+
+        if not books:
+            return jsonify({'message': 'No books found for your preferences.'})
+
+        recommendations = [
+            {'Title': title, 'ISBN': isbn, 'Pubdate': pubdate, 'Genre': genre}
+            for title, isbn, pubdate, genre in books
+        ]
+        return jsonify(recommendations)
+
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({'message': 'An error occurred while fetching recommendations.'}), 500
 
 # Logout route
 @app.route('/logout')
