@@ -36,7 +36,7 @@
       <div class="max-w-2xl mx-auto text-center">
         <h2 class="text-4xl font-bold mb-4">Welcome, {{ user[0] }} {{ user[1] }}!</h2>
         <p class="text-xl mb-4">Email: {{ user[2] }}</p>
-        <p class="text-lg">Here are all the books in the BookSage library:</p>
+        <p class="text-lg">All Books in BookSage library:</p>
       </div>
     </div>
   </section>
@@ -62,6 +62,7 @@
               <p class="text-gray-700"><strong>Era:</strong> {{ book['Book_Era'] }}</p>
               <p class="text-gray-700"><strong>Narrative Perspective:</strong> {{ book['Narrative_Perspective'] }}</p>
               <p class="text-gray-700"><strong>Format:</strong> {{ book['Book_Preference'] }}</p>
+              <p class="text-gray-700"><strong>Description:</strong> {{ book['Description'] }}</p>
             </div>
           {% endfor %}
         </div>
