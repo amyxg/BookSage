@@ -1,0 +1,25 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+  <div class="container mx-auto px-4 py-10">
+    {% if book %}
+      <h2 class="text-3xl font-bold mb-4">{{ book['Title'] }}</h2>
+      <p><strong>Author:</strong> {{ book['FirstName'] }} {{ book['LastName'] }}</p>
+      <p><strong>Genre:</strong> {{ book['Genre'] }}</p>
+      <p><strong>Fiction/Nonfiction:</strong> {{ book['Fiction_Nonfiction'] }}</p>
+      <p><strong>Theme:</strong> {{ book['Theme'] }}</p>
+      <p><strong>Tone:</strong> {{ book['Tone'] }}</p>
+      <p><strong>Length:</strong> {{ book['Book_Length'] }}</p>
+      <p><strong>Era:</strong> {{ book['Book_Era'] }}</p>
+      <p><strong>Narrative Perspective:</strong> {{ book['Narrative_Perspective'] }}</p>
+      <p><strong>Format:</strong> {{ book['Book_Preference'] }}</p>
+      <p><strong>Description:</strong> {{ book['Description'] }}</p>
+    {% else %}
+      <p class="text-red-600 text-xl font-semibold">Book not found in database.</p>
+    {% endif %}
+    <a href="{{ url_for('all_books') }}" class="text-blue-600 hover:underline mt-4 inline-block">← Back to All Books</a>
+  </div>
+{% endblock %}
+
+</section>
+{% endblock %}

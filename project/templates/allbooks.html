@@ -50,7 +50,11 @@
         <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {% for book in books %}
             <div class="bg-white shadow-lg rounded-2xl p-6">
-              <h3 class="text-xl font-semibold mb-2">{{ book['Title'] }}</h3>
+              <h3 class="text-xl font-semibold mb-2">
+                <a href="{{ url_for('book_detail', isbn=book['ISBN']) }}" class="text-blue-600 hover:underline">
+                  {{ book['Title'] }}
+                </a>
+              </h3>              
               <p class="text-gray-700"><strong>Author:</strong> {{ book['Firstname'] }} {{ book['Lastname'] }}</p>
               <p class="text-gray-700"><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
               <p class="text-gray-700"><strong>Published:</strong> {{ book['Pubdate'] }}</p>
