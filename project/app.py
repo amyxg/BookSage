@@ -66,11 +66,11 @@ def survey():
         # Format the multi-select fields as comma-separated strings
         genres_str = ', '.join(genres)
         themes_str = ', '.join(themes)
-        book_preference_str=', '.join(book_preference)
-        discover_method_str = ', '.join(discover_method)
-        tone_str =', '.join(tone)
+        book_preference_str= ', '.join(book_preference)
+        discover_method_str= ', '.join(discover_method)
+        tone_str = ', '.join(tone)
         book_era_str = ', '.join(book_era)
-        favorite_authors_str =', '.join(favorite_authors)
+        favorite_authors_str = ', '.join(favorite_authors)
         top_books_str =', '.join(top_books)
         reading_purpose_str = ', '.join(reading_purpose)
 
@@ -87,7 +87,7 @@ def survey():
                     reading_purpose = ?, thought_provoking = ?
                 WHERE user_id = ?
             ''', (
-                reading_frequency,  book_preference_str, discover_method_str, genres_str,
+                reading_frequency, book_preference_str, discover_method_str, genres_str,
                 fiction_non_fiction, explore_genres, tone_str, themes_str, book_length,
                 book_era_str, narrative_perspective, favorite_authors_str, top_books_str,
                 reading_purpose_str, thought_provoking, user_id
@@ -101,9 +101,9 @@ def survey():
                     narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
-                user_id, reading_frequency, book_preference, discover_method, genres_str,
-                fiction_non_fiction, explore_genres, tone, themes_str, book_length, book_era,
-                narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
+                user_id, reading_frequency, book_preference_str, discover_method_str, genres_str,
+                fiction_non_fiction, explore_genres, tone_str, themes_str, book_length, book_era_str,
+                narrative_perspective, favorite_authors_str, top_books_str, reading_purpose_str, thought_provoking
             ))
 
         # Mark user as completed survey
@@ -115,6 +115,7 @@ def survey():
         return redirect(url_for('dashboard'))
 
     return render_template('survey.html')
+
         
 @app.route('/survey_review')
 def survey_review():
