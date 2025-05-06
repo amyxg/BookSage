@@ -20,7 +20,9 @@ def db_connection():
 
 def query_table(connection):
     '''
-    Function queries a database
+    Function queries a database to show all books 
+    FIXME: need to take out most of Books query section
+    and put it in book_details
     '''
     try:
         #cursor used to submit DB requests/get results
@@ -50,10 +52,7 @@ def query_table(connection):
     JOIN 
         Author ON BookAuthor.AuthorID = Author.AuthorID
 ''')
-
-        
-
-        
+   
         # get results
         rows = cursor.fetchall()
         
@@ -75,7 +74,57 @@ def query_table(connection):
     finally:
         cursor.close()
         connection.close()
-    
+
+def get_book_by_isbn(connection, isbn):
+    """
+    Fetches book details by ISBN, including author info.
+    """
+    try:
+        #cursor used to submit DB requests/get results
+        cursor = connection.cursor()
+        cursor.execute('''
+            SELECT 
+                Books.ISBN,
+                Books.Title,
+                Books.PubDate,
+                Books.Genre,
+                Books.Fiction_Nonfiction,
+                Books.Theme,
+                Books.Tone,
+                Books.Book_Length,
+                Books.Book_Era,
+                Books.Narrative_Perspective,
+                Books.Book_Preference,
+                Author.FirstName,
+                Author.LastName
+            FROM Books
+            JOIN BookAuthor ON Books.ISBN = BookAuthor.ISBN
+            JOIN Author ON BookAuthor.AuthorID = Author.AuthorID
+            WHERE Books.ISBN = ?
+        ''', (isbn,))
+
+        # return one book at a time
+        row = cursor.fetchone()
+
+        # convert rows to dictionaries
+        # Is this correct?
+        result = [dict(row) for row in row]
+
+        print(result)      # can comment out, this just shows results are  
+                            # in a list of dictionaries
+
+        return result
+
+    # except handling errors, print error, return empty list
+    except Exception as e:
+        print(e)
+        return []   # empty list
+
+    # end function by closing connection & cursor
+    finally:
+        cursor.close()
+        connection.close()
+
 # call functions   
 conn = db_connection()
 query_table(conn)
