@@ -8,6 +8,9 @@
 
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Add this in <head> -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var hasCompletedSurvey = "{{ has_completed_survey | lower }}" === "true";
@@ -18,34 +21,45 @@
         });
     </script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-green-50">
     <!-- Header -->
-    <header class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex justify-between items-center">
-                <h1 class="text-3xl font-bold">BookSage - Dashboard</h1>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#" class="hover:text-blue-200">Home</a>
-                    <a href="#" class="hover:text-blue-200">Browse</a>
-                    <a href="#" class="hover:text-blue-200">My Books</a>
-                    <a href="#" class="hover:text-blue-200">Community</a>
-                </nav>
-                <div class="flex items-center space-x-4">
-                    <a href="{{ url_for('profile') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">{{ user[0] }}</a>
-
-                    <!--Added line below-->
-                    <a href="{{ url_for('all_books') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">All Books</a>
-                    <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
-
-                </div>
-            </div>
+    <!-- ✅ ENHANCED MENU BAR WITH DROPDOWN -->
+<header class="bg-green-700 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      
+      <!-- Brand -->
+      <div class="text-2xl font-bold">BookSage</div>
+  
+      <!-- Main navigation -->
+      <nav class="space-x-6 text-lg font-medium hidden md:flex">
+        <a href="{{ url_for('index') }}" class="hover:text-green-200">Home</a>
+        <a href="#" class="hover:text-green-200">Browse</a>
+        <a href="#" class="hover:text-green-200">My Books</a>
+        <a href="#" class="hover:text-green-200">Community</a>
+      </nav>
+  
+      <!-- Dropdown Menu -->
+      <div class="relative" x-data="{ open: false }">
+        <button @click="open = !open" class="bg-white text-green-700 px-4 py-2 rounded-md font-semibold hover:bg-green-100">
+          Account ▾
+        </button>
+  
+        <!-- Dropdown Items -->
+        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white text-green-800 rounded-md shadow-lg z-50">
+          <a href="{{ url_for('dashboard') }}" class="block px-4 py-2 hover:bg-green-100">Dashboard</a>
+          <a href="{{ url_for('all_books') }}" class="block px-4 py-2 hover:bg-green-100">All Books</a>
+          <a href="{{ url_for('profile') }}" class="block px-4 py-2 hover:bg-green-100">{{ user[0] }}</a>
+          <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-red-600 hover:bg-red-100">Log Out</a>
         </div>
-    </header>
+      </div>
+    </div>
+  </header>
+  
 
     <!-- Survey Completion Message -->
     {% if has_completed_survey %}
-    <div class="alert bg-blue-100 p-4 rounded-lg mt-6">
-        <p>You've completed the survey! <a href="{{ url_for('survey_review') }}" class="text-blue-600 underline">Click here to review your answers.</a></p>
+    <div class="alert bg-green-100 p-4 rounded-lg mt-6">
+        <p>You've completed the survey! <a href="{{ url_for('survey_review') }}" class="text-green-600 underline">Click here to review your answers.</a></p>
     </div>
     {% else %}
     <div class="alert bg-yellow-200 p-4 rounded-lg mt-6">
@@ -54,7 +68,7 @@
     {% endif %}
 
     <!-- Profile Section -->
-    <section class="bg-blue-700 text-white py-16">
+    <section class="bg-green-600 text-white py-16">
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
 
@@ -82,9 +96,9 @@
         const card = `
           <div class="bg-white shadow-lg rounded-2xl p-6">
             <h3 class="text-xl font-semibold mb-2">${book.Title}</h3>
-            <p class="text-gray-700"><strong>ISBN:</strong> ${book.ISBN}</p>
-            <p class="text-gray-700"><strong>Published:</strong> ${book.Pubdate}</p>
-            <p class="text-gray-700"><strong>Genre:</strong> ${book.Genre}</p>
+            <p class="text-green-700"><strong>ISBN:</strong> ${book.ISBN}</p>
+            <p class="text-green-700"><strong>Published:</strong> ${book.Pubdate}</p>
+            <p class="text-green-700"><strong>Genre:</strong> ${book.Genre}</p>
           </div>
         `;
         container.innerHTML += card;
