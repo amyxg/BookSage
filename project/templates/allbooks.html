@@ -51,10 +51,10 @@
           {% for book in books %}
             <div class="bg-white shadow-lg rounded-2xl p-6">
               {% if book['ISBN'] %}
-                <img src="https://covers.openlibrary.org/b/isbn/{{ book['ISBN'] }}-M.jpg"
-                  alt="Cover for {{ book['Title'] }}"
-                  class="w-full h-64 object-cover rounded mb-4"
-                  onerror="this.onerror=null; this.src='/static/img/placeholder-cover.jpg';">
+              <img src="https://covers.openlibrary.org/b/isbn/{{ book['ISBN'] }}-M.jpg?default=false"
+                alt="Cover for {{ book['Title'] }}"
+                class="w-full h-64 object-cover rounded mb-4"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/placeholder-cover.jpg') }}';">
                {% endif %}
               <h3 class="text-xl font-semibold mb-2">
                 <a href="{{ url_for('book_detail', isbn=book['ISBN']) }}" class="text-blue-600 hover:underline">
