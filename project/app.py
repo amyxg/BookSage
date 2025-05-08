@@ -172,6 +172,7 @@ def dashboard():
 # display all books in database
 @app.route('/allbooks')
 def all_books():
+    
     # make sure user is logged in first
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -182,7 +183,7 @@ def all_books():
     # query Books table to display info on books
     books = bk.query_table(db)
 
-    # store user info in session (or fetch from DB?)
+    # store user info in session
     user = session.get('user')
 
     return render_template('allbooks.html', books = books, user = user)
@@ -200,9 +201,15 @@ def book_detail(isbn):
     
     # query DB tables to show all detail about one book
     book = bk.get_book_by_isbn(connection, isbn)
+    print("THIS IS A ")
+    print(book)
+    # store user info in session
+    user = session.get('user')
 
     # store user info in session (or fetch from DB?)
-    user = session.get('user')
+    # user = session.get('user')
+    if not book:
+        return render_template('404.html'), 404
 
     return render_template('book_detail.html', book = book, user = user)
     

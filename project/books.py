@@ -59,7 +59,7 @@ def query_table(connection):
         # convert rows to dictionaries
         results = [dict(row) for row in rows]
 
-        print(results)      # can comment out, this just shows results are  
+        # print(results)      # can comment out, this just shows results are  
                             # in a list of dictionaries
 
         return results
@@ -95,6 +95,7 @@ def get_book_by_isbn(connection, isbn):
                 Books.Book_Era,
                 Books.Narrative_Perspective,
                 Books.Book_Preference,
+                Books.Description,
                 Author.FirstName,
                 Author.LastName
             FROM Books
@@ -106,14 +107,8 @@ def get_book_by_isbn(connection, isbn):
         # return one book at a time
         row = cursor.fetchone()
 
-        # convert rows to dictionaries
-        # Is this correct?
-        result = [dict(row) for row in row]
-
-        print(result)      # can comment out, this just shows results are  
-                            # in a list of dictionaries
-
-        return result
+        # convert row to dictionaries
+        return dict(row) if row else None
 
     # except handling errors, print error, return empty list
     except Exception as e:
