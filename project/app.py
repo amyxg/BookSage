@@ -172,42 +172,48 @@ def dashboard():
 # display all books in database
 @app.route('/allbooks')
 def all_books():
-    
+
     # make sure user is logged in first
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
     if 'db' not in g:
-        # connect to books database
+        # connect to bookSage database
         db = bk.db_connection()
+
     # query Books table to display info on books
     books = bk.query_table(db)
-
+    
     # store user info in session
-    user = session.get('user')
+    # user = session.get('user')
+
+    # call function to get user's id to display on web page
+    user = bk.get_user_by_id(session['user_id'])  
 
     return render_template('allbooks.html', books = books, user = user)
 
 # displays full details about one single book
 @app.route('/book/<isbn>')    
 def book_detail(isbn):   
+
     # make sure user is logged in first
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
     if 'db' not in g:
-        # connect to books database
+        # connect to bookSage database
         connection = bk.db_connection()
     
     # query DB tables to show all detail about one book
     book = bk.get_book_by_isbn(connection, isbn)
-    print("THIS IS A ")
-    print(book)
-    # store user info in session
-    user = session.get('user')
 
-    # store user info in session (or fetch from DB?)
+    # store user info in session
     # user = session.get('user')
+
+    # call function to get user's id to display on web page
+    user = bk.get_user_by_id(session['user_id'])  
+
+    # if book is not in database, then show an 404 error page
     if not book:
         return render_template('404.html'), 404
 

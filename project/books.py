@@ -1,5 +1,4 @@
 import sqlite3 as db
-# from flask import flask, g     # need to import flask in this file?
 
 # Connects to Books Database
 
@@ -21,8 +20,9 @@ def db_connection():
 def query_table(connection):
     '''
     Function queries a database to show all books 
-    FIXME: need to take out most of Books query section
-    and put it in book_details
+    and their respective Author's First & Last Name,
+    ISBN, Title, Publication Date & Genre.
+
     '''
     try:
         #cursor used to submit DB requests/get results
@@ -35,14 +35,6 @@ def query_table(connection):
         Books.Title,
         Books.PubDate,
         Books.Genre,
-        Books.Fiction_Nonfiction,
-        Books.Theme,
-        Books.Tone,
-        Books.Book_Length,
-        Books.Book_Era,
-        Books.Narrative_Perspective,
-        Books.Book_Preference,
-        Books.Description,
         Author.Firstname,
         Author.Lastname
     FROM 
@@ -77,7 +69,8 @@ def query_table(connection):
 
 def get_book_by_isbn(connection, isbn):
     """
-    Fetches book details by ISBN, including author info.
+    Fetches individual book details by ISBN, including author, 
+    description, etc.
     """
     try:
         #cursor used to submit DB requests/get results
@@ -120,6 +113,22 @@ def get_book_by_isbn(connection, isbn):
         cursor.close()
         connection.close()
 
+def get_user_by_id(user_id):
+    conn = db.connect('bookSage.db')
+    conn.row_factory = db.Row  # This lets you access rows as dicts
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT first_name, last_name, email
+        FROM Users
+        WHERE id = ?
+    ''', (user_id,))
+    user = cursor.fetchone()
+    conn.close()
+
+    return dict(user) if user else None
+
+
 # call functions   
-conn = db_connection()
-query_table(conn)
+# conn = db_connection()
+# query_table(conn)

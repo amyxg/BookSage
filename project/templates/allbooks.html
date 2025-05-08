@@ -34,8 +34,8 @@
   <section class="bg-blue-700 text-white py-16">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mx-auto text-center">
-        <h2 class="text-4xl font-bold mb-4">Welcome, {{ user[0] }} {{ user[1] }}!</h2>
-        <p class="text-xl mb-4">Email: {{ user[2] }}</p>
+        <h2 class="text-4xl font-bold mb-4">Welcome, {{ user['first_name'] }} {{ user['last_name'] }}!</h2>
+        <p class="text-xl mb-4">Email: {{ user['email'] }}</p>
         <p class="text-lg">All Books in BookSage library:</p>
       </div>
     </div>

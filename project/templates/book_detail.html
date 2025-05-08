@@ -35,8 +35,8 @@
     <section class="bg-blue-700 text-white py-16">
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-4xl font-bold mb-4">Welcome, {{ user[0] }} {{ user[1] }}!</h2>
-                <p class="text-xl mb-4">Email: {{ user[2] }}</p>
+                <h2 class="text-4xl font-bold mb-4">Welcome, {{ user['first_name'] }} {{ user['last_name'] }}!</h2>
+                <p class="text-xl mb-4">Email: {{ user['email'] }}</p>
                 <p class="text-lg">Book Details</p>
                 <a href="{{ url_for('all_books') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Back to All Books</a>
             </div>
@@ -50,7 +50,7 @@
   <div class="container mx-auto px-4 py-10">
     {% if book %}
       <h2 class="text-3xl font-bold mb-4">{{ book['Title'] }}</h2>
-      <p><strong>Author:</strong> {{ book['FirstName'] }} {{ book['LastName'] }}</p>
+      <p><strong>Author:</strong> {{ book['Firstname'] }} {{ book['Lastname'] }}</p>
       <p><strong>Genre:</strong> {{ book['Genre'] }}</p>
       <p><strong>Fiction/Nonfiction:</strong> {{ book['Fiction_Nonfiction'] }}</p>
       <p><strong>Theme:</strong> {{ book['Theme'] }}</p>
