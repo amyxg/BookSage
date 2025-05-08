@@ -30,6 +30,7 @@ Stores information about books in the system.
 | Book_Era | TEXT | | Historical period or era the book was written in or about |
 | Narrative_Perspective | TEXT | | Point of view used in the narrative (e.g., first person, third person) |
 | Book_Preference | TEXT | | Additional preference categorization |
+| Description | TEXT | | Description of book |
 
 ### BookAuthor
 Junction table that establishes a many-to-many relationship between books and authors.
