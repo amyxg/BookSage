@@ -50,6 +50,12 @@
         <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {% for book in books %}
             <div class="bg-white shadow-lg rounded-2xl p-6">
+              {% if book['ISBN'] %}
+                <img src="https://covers.openlibrary.org/b/isbn/{{ book['ISBN'] }}-M.jpg"
+                  alt="Cover for {{ book['Title'] }}"
+                  class="w-full h-64 object-cover rounded mb-4"
+                  onerror="this.onerror=null; this.src='/static/images/placeholder-cover.jpg';">
+               {% endif %}
               <h3 class="text-xl font-semibold mb-2">
                 <a href="{{ url_for('book_detail', isbn=book['ISBN']) }}" class="text-blue-600 hover:underline">
                   {{ book['Title'] }}
@@ -59,7 +65,7 @@
               <p class="text-gray-700"><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
               <p class="text-gray-700"><strong>Published:</strong> {{ book['Pubdate'] }}</p>
               <p class="text-gray-700"><strong>Genre:</strong> {{ book['Genre'] }}</p>
-              <!--
+              <!-- Commented out these fields as they will show on book details page --
               <p class="text-gray-700"><strong>Fiction/Nonfiction:</strong> {{ book['Fiction_Nonfiction'] }}</p>
               <p class="text-gray-700"><strong>Theme:</strong> {{ book['Theme'] }}</p>
               <p class="text-gray-700"><strong>Tone:</strong> {{ book['Tone'] }}</p>
