@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Survey</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Add this in <head> -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 </head>
 <script>
     function toggleOtherGenreInput() {
@@ -40,19 +43,40 @@
     }
 </script>
 
-<body class="bg-gray-50">
+<body class="bg-green-50">
     <!-- Header -->
-    <header class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex justify-between items-center">
-                <h1 class="text-3xl font-bold">BookSage Survey</h1>
-                <div class="flex items-center space-x-4">
-                    <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
-                    <a href="{{ url_for('profile') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Profile</a>
-                </div>
-            </div>
+    <!-- ✅ ENHANCED MENU BAR WITH DROPDOWN -->
+<header class="bg-green-700 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      
+      <!-- Brand -->
+      <div class="text-2xl font-bold">BookSage</div>
+  
+      <!-- Main navigation -->
+      <nav class="space-x-6 text-lg font-medium hidden md:flex">
+        <a href="{{ url_for('index') }}" class="hover:text-green-200">Home</a>
+        <a href="#" class="hover:text-green-200">Browse</a>
+        <a href="#" class="hover:text-green-200">My Books</a>
+        <a href="#" class="hover:text-green-200">Community</a>
+      </nav>
+  
+      <!-- Dropdown Menu -->
+      <div class="relative" x-data="{ open: false }">
+        <button @click="open = !open" class="bg-white text-green-700 px-4 py-2 rounded-md font-semibold hover:bg-green-100">
+          Account ▾
+        </button>
+  
+        <!-- Dropdown Items -->
+        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white text-green-800 rounded-md shadow-lg z-50">
+          <a href="{{ url_for('dashboard') }}" class="block px-4 py-2 hover:bg-green-100">Dashboard</a>
+          <!--<a href="{{ url_for('all_books') }}" class="block px-4 py-2 hover:bg-green-100">All Books</a>-->
+          <!--<a href="{{ url_for('survey') }}" class="block px-4 py-2 hover:bg-green-100">Update Survey</a>-->
+          <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-red-600 hover:bg-red-100">Log Out</a>
         </div>
-    </header>
+      </div>
+    </div>
+  </header>
+  
 
     <!-- Centered Form Section -->
     <div class="flex justify-center py-10 px-4">
@@ -163,14 +187,14 @@
             <h2 class="text-2xl font-semibold text-center mb-4">Author Engagement</h2>
             
 <label class="font-semibold text-gray-900">Your favorite authors:</label><br>
-<input type="text" name="favorite_authors" class="border-2 border-blue-400 rounded-md px-2 py-1 mb-2">
-<input type="text" name="favorite_authors" class="border-2 border-blue-400 rounded-md px-2 py-1 mb-2">
-<input type="text" name="favorite_authors" class="border-2 border-blue-400 rounded-md px-2 py-1 mb-4"><br><br>
+<input type="text" name="favorite_authors" class="border-2 border-green-400 rounded-md px-2 py-1 mb-2">
+<input type="text" name="favorite_authors" class="border-2 border-green-400 rounded-md px-2 py-1 mb-2">
+<input type="text" name="favorite_authors" class="border-2 border-green-400 rounded-md px-2 py-1 mb-4"><br><br>
 
 <label class="font-semibold text-gray-900">Your top 3 favorite books:</label><br>
-<input type="text" name="top_books" class="border-2 border-blue-400 rounded-md px-2 py-1 mb-2">
-<input type="text" name="top_books" class="border-2 border-blue-400 rounded-md px-2 py-1 mb-2">
-<input type="text" name="top_books" class="border-2 border-blue-400 rounded-md px-2 py-1 mb-4"><br><br>
+<input type="text" name="top_books" class="border-2 border-green-400 rounded-md px-2 py-1 mb-2">
+<input type="text" name="top_books" class="border-2 border-green-400 rounded-md px-2 py-1 mb-2">
+<input type="text" name="top_books" class="border-2 border-green-400 rounded-md px-2 py-1 mb-4"><br><br>
 
 
             <h2 class="text-2xl font-semibold text-center mb-4">Reading Purpose</h2>
@@ -186,7 +210,7 @@
             <br><br>
 
             <div class="text-center">
-                <input type="submit" value="Submit Survey" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                <input type="submit" value="Submit Survey" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
             </div>
         </form>
     </div>
