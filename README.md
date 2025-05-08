@@ -40,3 +40,6 @@ python app.py
 - Alya Saleh  - Team Developer
 - Laura K Jackson - Team/Backend Developer
 - Joshua Carter -Frontend Developer
+
+## Further Notes
+To recreate the database, make sure you are in the project folder before running models.py
