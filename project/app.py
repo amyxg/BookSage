@@ -31,6 +31,7 @@ def login():
             return redirect(url_for('login'))
     return render_template('login.html')
 # Survey route <!--that was added or modify-->
+
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
     user_id = session.get('user_id')
@@ -43,8 +44,7 @@ def survey():
     # Check if the user already submitted the survey
     cursor.execute('SELECT * FROM survey_responses WHERE user_id = ?', (user_id,))
     existing_response = cursor.fetchone()
-    conn.close()
-
+    
     if request.method == 'POST':
         # Retrieve the form data from the survey
         reading_frequency = request.form.get('reading_frequency')
@@ -63,41 +63,16 @@ def survey():
         reading_purpose = request.form.getlist('reading_purpose')
         thought_provoking = request.form.get('thought_provoking')
 
-
-        # Connect to the database and save the responses
-        conn = sqlite3.connect('bookSage.db')
-        cursor = conn.cursor()
-        cursor.execute('''
-            INSERT INTO survey_responses (
-                user_id, reading_frequency, book_preference, discover_method, genres,
-                fiction_non_fiction, explore_genres, tone, themes, book_length, book_era,
-                narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            session['user_id'], reading_frequency, book_preference, discover_method, ', '.join(genres),
-            fiction_non_fiction, explore_genres, tone, ', '.join(themes), book_length, book_era,
-            narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
-        ))
-        conn.commit()
-        conn.close()
-
-        # Update the user table to mark that the survey is completed
-        conn = sqlite3.connect('bookSage.db')
-
         # Format the multi-select fields as comma-separated strings
+        book_preference_str = ', '.join(book_preference)
+        discover_method_str = ', '.join(discover_method)
         genres_str = ', '.join(genres)
-        themes_str = ', '.join(themes)
-        book_preference_str= ', '.join(book_preference)
-        discover_method_str= ', '.join(discover_method)
         tone_str = ', '.join(tone)
+        themes_str = ', '.join(themes)
         book_era_str = ', '.join(book_era)
         favorite_authors_str = ', '.join(favorite_authors)
-        top_books_str =', '.join(top_books)
+        top_books_str = ', '.join(top_books)
         reading_purpose_str = ', '.join(reading_purpose)
-
-        conn = sqlite3.connect('bookSage.db')
-
-        cursor = conn.cursor()
 
         if existing_response:
             # Update existing survey response
@@ -136,9 +111,9 @@ def survey():
         flash("Survey submitted successfully! You can review or update your answers on your dashboard.", "success")
         return redirect(url_for('dashboard'))
 
+    conn.close()
     return render_template('survey.html')
 
-        
 @app.route('/survey_review')
 def survey_review():
     # Assuming you're logged in and have a user_id available
