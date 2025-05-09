@@ -3,131 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookSage Survey</title>
+    <title>Survey</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Add this in <head> -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 </head>
-<body>
-    <h1>BookSage Survey</h1>
-    <form action="{{ url_for('survey') }}" method="POST">
-        <h2>Reading Habits</h2>
-        <label>How often do you read books?</label><br>
-        <input type="radio" name="reading_frequency" value="Daily"> Daily
-        <input type="radio" name="reading_frequency" value="A few times a week"> A few times a week
-        <input type="radio" name="reading_frequency" value="A few times a month"> A few times a month
-        <input type="radio" name="reading_frequency" value="Rarely"> Rarely
-        <input type="radio" name="reading_frequency" value="Never"> Never
-        <br><br>
+<script>
+    function toggleOtherGenreInput() {
+        const checkbox = document.getElementById('genreOtherCheckbox');
+        const input = document.getElementById('otherGenreInput');
+        input.classList.toggle('hidden', !checkbox.checked);
+    }
+</script>
+<script>
+    function validateSurveyForm() {
+        // Validate Genres
+        const genreChecked = document.querySelectorAll('input[name="genres"]:checked').length > 0;
+        if (!genreChecked) {
+            alert("Please select at least one genre.");
+            return false;
+        }
 
-        <label>Do you prefer physical books, e-books, or audiobooks?</label><br>
-        <input type="radio" name="book_preference" value="Print"> Print
-        <input type="radio" name="book_preference" value="E-book"> E-book
-        <input type="radio" name="book_preference" value="Audiobook"> Audiobook
-        <input type="radio" name="book_preference" value="No preference"> No preference
-        <br><br>
+        // Validate Themes
+        const themeChecked = document.querySelectorAll('input[name="themes"]:checked').length > 0;
+        if (!themeChecked) {
+            alert("Please select at least one theme.");
+            return false;
+        }
 
-        <label>How do you typically discover new books to read?</label><br>
-        <input type="radio" name="discover_method" value="Friend/Family"> Friend/Family
-        <input type="radio" name="discover_method" value="Social Media"> Social Media
-        <input type="radio" name="discover_method" value="Online Reviews"> Online Reviews
-        <input type="radio" name="discover_method" value="Library/Bookstore"> Library/Bookstore
-        <input type="radio" name="discover_method" value="Ads"> Ads
-        <input type="radio" name="discover_method" value="Other"> Other
-        <br><br>
+        // Validate Tone
+        const toneChecked = document.querySelectorAll('input[name="tone"]:checked').length > 0;
+        if (!toneChecked) {
+            alert("Please select at least one tone.");
+            return false;
+        }
 
-        <h2>Genre Preferences</h2>
-        <label>Which genres do you enjoy most? (Select all that apply)</label><br>
-        <input type="checkbox" name="genres" value="Fantasy"> Fantasy
-        <input type="checkbox" name="genres" value="Science Fiction"> Science Fiction
-        <input type="checkbox" name="genres" value="Mystery/Thriller"> Mystery/Thriller
-        <input type="checkbox" name="genres" value="Romance"> Romance
-        <input type="checkbox" name="genres" value="Historical Fiction"> Historical Fiction
-        <input type="checkbox" name="genres" value="Non-fiction"> Non-fiction
-        <input type="checkbox" name="genres" value="Biography"> Biography
-        <input type="checkbox" name="genres" value="Memoir"> Memoir
-        <input type="checkbox" name="genres" value="Horror"> Horror
-        <input type="checkbox" name="genres" value="Literary Fiction"> Literary Fiction
-        <input type="checkbox" name="genres" value="Young Adult"> Young Adult
-        <input type="checkbox" name="genres" value="Children’s"> Children’s
-        <input type="checkbox" name="genres" value="Self-help"> Self-help
-        <input type="checkbox" name="genres" value="Humor"> Humor
-        <input type="checkbox" name="genres" value="Graphic Novels"> Graphic Novels
-        <input type="checkbox" name="genres" value="Other"> Other (Please specify)
-        <br><br>
+        return true;
+    }
+</script>
 
-        <label>Do you prefer fiction or non-fiction?</label><br>
-        <input type="radio" name="fiction_non_fiction" value="Fiction"> Fiction
-        <input type="radio" name="fiction_non_fiction" value="Non-fiction"> Non-fiction
-        <input type="radio" name="fiction_non_fiction" value="Both"> Both
-        <br><br>
+<body class="bg-green-50">
+    <!-- Header -->
+    <!-- ✅ ENHANCED MENU BAR WITH DROPDOWN -->
+<header class="bg-green-700 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      
+      <!-- Brand -->
+      <div class="text-2xl font-bold">BookSage</div>
+  
+      <!-- Main navigation -->
+      <nav class="space-x-6 text-lg font-medium hidden md:flex">
+        <a href="{{ url_for('index') }}" class="hover:text-green-200">Home</a>
+        <a href="#" class="hover:text-green-200">Browse</a>
+        <a href="#" class="hover:text-green-200">My Books</a>
+        <a href="#" class="hover:text-green-200">Community</a>
+      </nav>
+  
+      <!-- Dropdown Menu -->
+      <div class="relative" x-data="{ open: false }">
+        <button @click="open = !open" class="bg-white text-green-700 px-4 py-2 rounded-md font-semibold hover:bg-green-100">
+          Account ▾
+        </button>
+  
+        <!-- Dropdown Items -->
+        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white text-green-800 rounded-md shadow-lg z-50">
+          <a href="{{ url_for('dashboard') }}" class="block px-4 py-2 hover:bg-green-100">Dashboard</a>
+          <!--<a href="{{ url_for('all_books') }}" class="block px-4 py-2 hover:bg-green-100">All Books</a>-->
+          <!--<a href="{{ url_for('survey') }}" class="block px-4 py-2 hover:bg-green-100">Update Survey</a>-->
+          <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-red-600 hover:bg-red-100">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  
 
-        <label>Are you interested in exploring genres you don’t usually read?</label><br>
-        <input type="radio" name="explore_genres" value="Yes"> Yes
-        <input type="radio" name="explore_genres" value="No"> No
-        <br><br>
+    <!-- Centered Form Section -->
+    <div class="flex justify-center py-10 px-4">
+        <form action="{{ url_for('survey') }}" method="POST" onsubmit="return validateSurveyForm()" class="w-full max-w-3xl bg-white shadow-md rounded-lg p-8 space-y-4">
+            <h2 class="text-2xl font-semibold text-center mb-6">Reading Habits</h2>
 
-        <h2>Content Preferences</h2>
-        <label>Preferred book format:</label><br>
-        <input type="radio" name="book_preference" value="Print"> Print
-        <input type="radio" name="book_preference" value="E-book"> E-book
-        <input type="radio" name="book_preference" value="Audiobook"> Audiobook
-        <br><br>
+            <label class="font-semibold text-gray-900">How often do you read books?</label><br>
 
-        <label>Preferred tone of books:</label><br>
-        <input type="radio" name="tone" value="Light-hearted"> Light-hearted
-        <input type="radio" name="tone" value="Dark"> Dark
-        <input type="radio" name="tone" value="Inspiring"> Inspiring
-        <input type="radio" name="tone" value="Suspenseful"> Suspenseful
-        <input type="radio" name="tone" value="Thought-provoking"> Thought-provoking
-        <br><br>
+            <input type="radio" name="reading_frequency" value="Daily"> Daily
+            <input type="radio" name="reading_frequency" value="A few times a week"> A few times a week
+            <input type="radio" name="reading_frequency" value="A few times a month"> A few times a month
+            <input type="radio" name="reading_frequency" value="Rarely"> Rarely
+            <input type="radio" name="reading_frequency" value="Never"> Never
+            <br><br>
 
-        <label>Themes that resonate with you (select all that apply):</label><br>
-        <input type="checkbox" name="themes" value="Friendship"> Friendship
-        <input type="checkbox" name="themes" value="Justice"> Justice
-        <input type="checkbox" name="themes" value="Overcoming adversity"> Overcoming adversity
-        <input type="checkbox" name="themes" value="Love"> Love
-        <input type="checkbox" name="themes" value="Self-discovery"> Self-discovery
-        <input type="checkbox" name="themes" value="Other"> Other
-        <br><br>
+            <label class="font-semibold text-gray-900">Do you prefer physical books, e-books, or audiobooks?</label><br>
+            <input type="checkbox" name="book_preference" value="Print"> Print
+            <input type="checkbox" name="book_preference" value="E-book"> E-book
+            <input type="checkbox" name="book_preference" value="Audiobook"> Audiobook
+            <input type="checkbox" name="book_preference" value="No preference"> No preference
+            <br><br>
 
-        <label>Preferred book length:</label><br>
-        <input type="radio" name="book_length" value="Short"> Short
-        <input type="radio" name="book_length" value="Medium"> Medium
-        <input type="radio" name="book_length" value="Long"> Long
-        <br><br>
+            <label class="font-semibold text-gray-900">How do you typically discover new books to read?</label><br>
+            <input type="checkbox" name="discover_method" value="Friend/Family"> Friend/Family
+            <input type="checkbox" name="discover_method" value="Social Media"> Social Media
+            <input type="checkbox" name="discover_method" value="Online Reviews"> Online Reviews
+            <input type="checkbox" name="discover_method" value="Library/Bookstore"> Library/Bookstore
+            <input type="checkbox" name="discover_method" value="Ads"> Ads
+            <input type="checkbox" name="discover_method" value="Other"> Other
+            <br><br>
 
-        <label>Preferred era in books:</label><br>
-        <input type="radio" name="book_era" value="Modern"> Modern
-        <input type="radio" name="book_era" value="Historical"> Historical
-        <input type="radio" name="book_era" value="Futuristic"> Futuristic
-        <br><br>
-            <!--changed-->
-        <label>Preferred narrative perspective:</label><br>
-        <input type="radio" name="narrative_perspective" value="First person"> First person
-        <input type="radio" name="narrative_perspective" value="Third person"> Third person
-        <input type="radio" name="narrative_perspective" value="Multiple POVs"> Multiple POVs
-        <br><br>
+            <h2 class="text-2xl font-semibold text-center mb-4">Genre Preferences</h2><br>
+             <div class="mb-4">
+            <label class="font-semibold text-gray-900">Which genres do you enjoy most? (Select all that apply)</label><br>
+            <input type="checkbox" name="genres" value="Fantasy"> Fantasy
+            <input type="checkbox" name="genres" value="Science Fiction"> Science Fiction
+            <input type="checkbox" name="genres" value="Mystery"> Mystery
+            <input type="checkbox" name="genres" value="Romance"> Romance
+            <input type="checkbox" name="genres" value="Historical Fiction"> Historical Fiction
+            <input type="checkbox" name="genres" value="Non-fiction"> Non-fiction
+            <input type="checkbox" name="genres" value="Biography"> Biography
+            <input type="checkbox" name="genres" value="Memoir"> Memoir
+            <input type="checkbox" name="genres" value="Horror"> Horror
+            <input type="checkbox" name="genres" value="Literary Fiction"> Literary Fiction
+            <input type="checkbox" name="genres" value="Young Adult"> Young Adult
+            <input type="checkbox" name="genres" value="Children’s"> Children’s
+            <input type="checkbox" name="genres" value="Self-help"> Self-help
+            <input type="checkbox" name="genres" value="Humor"> Humor
+            <input type="checkbox" name="genres" value="Graphic Novels"> Graphic Novels
+            <input type="checkbox" id="genreOtherCheckbox" name="genres" value="Other" onchange="toggleOtherGenreInput()"> Other (Please specify)
+    <input type="text" id="otherGenreInput" name="genre" placeholder="Enter genre..." class="mt-2 border border-blue-500 rounded px-2 py-1 ml-2 hidden">
+</div>
+            <br><br>
 
-        <h2>Author Engagement</h2>
-        <label>Your favorite authors:</label><br>
-        <input type="text" name="favorite_authors">
-        <br><br>
+            <label class="font-semibold text-gray-900">Do you prefer fiction or non-fiction?</label><br>
+            <input type="radio" name="fiction_non_fiction" value="Fiction"> Fiction
+            <input type="radio" name="fiction_non_fiction" value="Non-fiction"> Non-fiction
+            <input type="radio" name="fiction_non_fiction" value="Both"> Both
+            <br><br>
 
-        <label>Your top 3 favorite books:</label><br>
-        <input type="text" name="top_books">
-        <br><br>
+            <label class="font-semibold text-gray-900">Are you interested in exploring genres you don’t usually read?</label><br>
+            <input type="radio" name="explore_genres" value="Yes"> Yes
+            <input type="radio" name="explore_genres" value="No"> No
+            <br><br>
+            <!--
+            <h2 class="text-2xl font-semibold text-center mb-4">Content Preferences</h2>
+            <label class="font-semibold text-gray-900">Preferred book format:</label><br>
+            <input type="checkbox" name="book_preference" value="Print"> Print
+            <input type="checkbox" name="book_preference" value="E-book"> E-book
+            <input type="checkbox" name="book_preference" value="Audiobook"> Audiobook
+            <br><br>-->
 
-        <h2>Reading Purpose</h2>
-        <label>Why do you read?</label><br>
-        <input type="radio" name="reading_purpose" value="Entertainment"> Entertainment
-        <input type="radio" name="reading_purpose" value="Education"> Education
-        <input type="radio" name="reading_purpose" value="Personal Growth"> Personal Growth
-        <br><br>
+            <label class="font-semibold text-gray-900">Preferred tone of books:</label><br>
+            <input type="checkbox" name="tone" value="Light-hearted"> Light-hearted
+            <input type="checkbox" name="tone" value="Dark"> Dark
+            <input type="checkbox" name="tone" value="Inspiring"> Inspiring
+            <input type="checkbox" name="tone" value="Suspenseful"> Suspenseful
+            <input type="checkbox" name="tone" value="Thought-provoking"> Thought-provoking
+            <br><br>
 
-        <label>Do you prefer thought-provoking or light reads?</label><br>
-        <input type="radio" name="thought_provoking" value="Thought-provoking"> Thought-provoking
-        <input type="radio" name="thought_provoking" value="Light reads"> Light reads
-        <br><br>
+            <label class="font-semibold text-gray-900">Themes that resonate with you (select all that apply):</label><br>
+            <input type="checkbox" name="themes" value="Friendship"> Friendship
+            <input type="checkbox" name="themes" value="Justice"> Justice
+            <input type="checkbox" name="themes" value="Overcoming adversity"> Overcoming adversity
+            <input type="checkbox" name="themes" value="Love"> Love
+            <input type="checkbox" name="themes" value="Self-discovery"> Self-discovery
+            <input type="checkbox" name="themes" value="Other"> Other
+            <br><br>
 
-        <input type="submit" value="Submit Survey">
-    </form>
+            <label class="font-semibold text-gray-900">Preferred book length:</label><br>
+            <input type="radio" name="book_length" value="Short"> Short
+            <input type="radio" name="book_length" value="Medium"> Medium
+            <input type="radio" name="book_length" value="Long"> Long
+            <br><br>
+
+            <label class="font-semibold text-gray-900">Preferred era in books:</label><br>
+            <input type="checkbox" name="book_era" value="Modern"> Modern
+            <input type="checkbox" name="book_era" value="Historical"> Historical
+            <input type="checkbox" name="book_era" value="Futuristic"> Futuristic
+            <br><br>
+
+            <label class="font-semibold text-gray-900">Preferred narrative perspective:</label><br>
+            <input type="radio" name="narrative_perspective" value="First person"> First person
+            <input type="radio" name="narrative_perspective" value="Third person"> Third person
+            <input type="radio" name="narrative_perspective" value="Multiple POVs"> Multiple POVs
+            <br><br>
+
+            <h2 class="text-2xl font-semibold text-center mb-4">Author Engagement</h2>
+            
+<label class="font-semibold text-gray-900">Your favorite authors:</label><br>
+<input type="text" name="favorite_authors" class="border-2 border-green-400 rounded-md px-2 py-1 mb-2">
+<input type="text" name="favorite_authors" class="border-2 border-green-400 rounded-md px-2 py-1 mb-2">
+<input type="text" name="favorite_authors" class="border-2 border-green-400 rounded-md px-2 py-1 mb-4"><br><br>
+
+<label class="font-semibold text-gray-900">Your top 3 favorite books:</label><br>
+<input type="text" name="top_books" class="border-2 border-green-400 rounded-md px-2 py-1 mb-2">
+<input type="text" name="top_books" class="border-2 border-green-400 rounded-md px-2 py-1 mb-2">
+<input type="text" name="top_books" class="border-2 border-green-400 rounded-md px-2 py-1 mb-4"><br><br>
+
+
+            <h2 class="text-2xl font-semibold text-center mb-4">Reading Purpose</h2>
+            <label class="font-semibold text-gray-900">Why do you read?</label><br>
+            <input type="checkbox" name="reading_purpose" value="Entertainment"> Entertainment
+            <input type="checkbox" name="reading_purpose" value="Education"> Education
+            <input type="checkbox" name="reading_purpose" value="Personal Growth"> Personal Growth
+            <br><br>
+
+            <label class="font-semibold text-gray-900">Do you prefer thought-provoking or light reads?</label><br>
+            <input type="radio" name="thought_provoking" value="Thought-provoking"> Thought-provoking
+            <input type="radio" name="thought_provoking" value="Light reads"> Light reads
+            <br><br>
+
+            <div class="text-center">
+                <input type="submit" value="Submit Survey" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+            </div>
+        </form>
+    </div>
 </body>
 </html>

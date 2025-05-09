@@ -36,7 +36,9 @@ python app.py
 
 
 ## Developers
-- Amy Santjer - Lead Developer
-- Alya Saleh  - Team Developer
+- Alya Saleh  - Team/Backend Developer
 - Laura K Jackson - Team/Backend Developer
 - Joshua Carter -Frontend Developer
+
+## Further Notes
+To recreate the database, make sure you are in the project folder before running models.py

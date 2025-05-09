@@ -6,32 +6,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Books</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <!-- Add this in <head> -->
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 </head>
-<body class="bg-gray-50">
+<body class="bg-green-50">
   <!-- Header -->
-  <header class="bg-blue-600 text-white shadow-lg">
-    <div class="container mx-auto px-4 py-6">
-      <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold">BookSage</h1>
-        <nav class="hidden md:flex space-x-6">
-          <a href="{{ url_for('index') }}" class="hover:text-blue-200">Home</a>
-          <a href="#" class="hover:text-blue-200">Browse</a>
-          <a href="#" class="hover:text-blue-200">My Books</a>
-          <a href="#" class="hover:text-blue-200">Community</a>
-          <a href="{{ url_for('survey') }}" class="hover:text-blue-200">Survey</a>
-        </nav>
-        <div class="flex items-center space-x-4">
-          <a href="{{ url_for('dashboard') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Dashboard</a>
-          <a href="{{ url_for('all_books') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">All Books</a>
-          <a href="{{ url_for('survey') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Survey</a>
-          <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
-        </div>
+  <!-- ✅ ENHANCED MENU BAR WITH DROPDOWN -->
+<header class="bg-green-700 text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    
+    <!-- Brand -->
+    <div class="text-2xl font-bold">BookSage</div>
+
+    <!-- Main navigation -->
+    <nav class="space-x-6 text-lg font-medium hidden md:flex">
+      <a href="{{ url_for('index') }}" class="hover:text-green-200">Home</a>
+      <a href="#" class="hover:text-green-200">Browse</a>
+      <a href="#" class="hover:text-green-200">My Books</a>
+      <a href="#" class="hover:text-green-200">Community</a>
+    </nav>
+
+    <!-- Dropdown Menu -->
+    <div class="relative" x-data="{ open: false }">
+      <button @click="open = !open" class="bg-white text-green-700 px-4 py-2 rounded-md font-semibold hover:bg-green-100">
+        Account ▾
+      </button>
+
+      <!-- Dropdown Items -->
+      <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white text-green-800 rounded-md shadow-lg z-50">
+        <a href="{{ url_for('dashboard') }}" class="block px-4 py-2 hover:bg-green-100">Dashboard</a>
+        <!--<a href="{{ url_for('survey') }}" class="block px-4 py-2 hover:bg-green-100">Update Survey</a>-->
+        <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-red-600 hover:bg-red-100">Log Out</a>
       </div>
     </div>
-  </header>
+  </div>
+</header>
+
 
   <!-- Hero Section -->
-  <section class="bg-blue-700 text-white py-16">
+  <section class="bg-green-600 text-white py-16">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mx-auto text-center">
         <h2 class="text-4xl font-bold mb-4">Welcome, {{ user['first_name'] }} {{ user['last_name'] }}!</h2>
@@ -45,11 +59,12 @@
   <section class="py-10">
     <div class="container mx-auto px-4">
       {% if not books %}
-        <p class="text-gray-600">No books found in the database.</p>
+        <p class="text-green-600">No books found in the database.</p>
       {% else %}
         <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {% for book in books %}
             <div class="bg-white shadow-lg rounded-2xl p-6">
+
               {% if book['ISBN'] %}
               <img src="https://covers.openlibrary.org/b/isbn/{{ book['ISBN'] }}-M.jpg?default=false"
                 alt="Cover for {{ book['Title'] }}"
@@ -75,6 +90,12 @@
               <p class="text-gray-700"><strong>Format:</strong> {{ book['Book_Preference'] }}</p>
               <p class="text-gray-700"><strong>Description:</strong> {{ book['Description'] }}</p>
               -->
+
+              <h3 class="text-xl font-semibold mb-2">{{ book['Title'] }}</h3>
+              <p class="text-green-700"><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
+              <p class="text-green-700"><strong>Published:</strong> {{ book['Pubdate'] }}</p>
+              <p class="text-green-700"><strong>Genre:</strong> {{ book['Genre'] }}</p>
+
             </div>
           {% endfor %}
         </div>
