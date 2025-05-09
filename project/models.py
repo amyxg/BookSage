@@ -35,6 +35,15 @@ def init_db():
     thought_provoking TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id)
     )''')
+    
+    c.execute('''CREATE TABLE user_books (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    isbn TEXT,
+    saved_at DATETIME DEFAULT CURRENT_TIMESTAMP
+
+    )''')
+
     conn.commit()
     conn.close()
 

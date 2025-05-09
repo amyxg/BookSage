@@ -167,40 +167,63 @@ def register():
 def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+
     conn = sqlite3.connect('bookSage.db')
     c = conn.cursor()
+
+    # Get user personal info
     c.execute("SELECT first_name, last_name, email FROM users WHERE id = ?", (session['user_id'],))
     user = c.fetchone()
+
+    # Get books the user has saved
+    c.execute('''
+        SELECT b.Title, b.ISBN, b.Pubdate, b.Genre
+        FROM user_books ub
+        JOIN books b ON ub.isbn = b.ISBN
+        WHERE ub.user_id = ?
+    ''', (session['user_id'],))
+    saved_books = c.fetchall()
+
     conn.close()
-    return render_template('profile.html', user=user)
+
+    return render_template('profile.html', user=user, saved_books=saved_books)
+
 
 # dashboard route
 #<!--that was added or modify-->
+# Define the function to check survey completion
+def check_if_completed_survey(user_id):
+    conn = sqlite3.connect('bookSage.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT has_completed_survey FROM users WHERE id = ?', (user_id,))
+    result = cursor.fetchone()
+    conn.close()
+    
+    if result:
+        return result[0] == 1  # Assuming 1 means survey completed
+    return False
+
+# Dashboard route
 @app.route('/dashboard')
 def dashboard():
-    # Retrieve the user id from the session
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
 
-    # Fetch the user details from the database
     conn = sqlite3.connect('bookSage.db')
     cursor = conn.cursor()
     cursor.execute('SELECT first_name, last_name FROM users WHERE id = ?', (user_id,))
     user = cursor.fetchone()
     conn.close()
 
-    # Check if the user exists
     if not user:
-        return redirect(url_for('login'))
+        return redirect(url_for('login'))  # If no user is found, redirect to login
 
     # Check if the user has completed the survey
     has_completed_survey = check_if_completed_survey(user_id)
 
     # Render the dashboard page with the user details and survey status
     return render_template('dashboard.html', user=user, has_completed_survey=has_completed_survey)
-
-
 # display all books in database
 @app.route('/allbooks')
 def all_books():
@@ -223,43 +246,48 @@ def all_books():
     user = bk.get_user_by_id(session['user_id'])  
 
     return render_template('allbooks.html', books = books, user = user)
+def add_book_to_profile(user_id, isbn):
+    conn = sqlite3.connect('bookSage.db')
+    cursor = conn.cursor()
+
+    # Check if the book is already saved
+    cursor.execute('SELECT 1 FROM user_books WHERE user_id = ? AND isbn = ?', (user_id, isbn))
+    exists = cursor.fetchone()
+
+    if not exists:
+        cursor.execute('INSERT INTO user_books (user_id, isbn) VALUES (?, ?)', (user_id, isbn))
+        conn.commit()
+
+    conn.close()
+
 
 # displays full details about one single book
-@app.route('/book/<isbn>')    
-def book_detail(isbn):   
-
-    # make sure user is logged in first
+@app.route('/book/<isbn>', methods=['GET', 'POST'])
+def book_detail(isbn):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
-    if 'db' not in g:
-        # connect to bookSage database
-        connection = bk.db_connection()
-    
-    # query DB tables to show all detail about one book
+
+    user_id = session['user_id']
+    connection = bk.db_connection()
     book = bk.get_book_by_isbn(connection, isbn)
+    user = bk.get_user_by_id(user_id)
 
-    # store user info in session
-    # user = session.get('user')
-
-    # call function to get user's id to display on web page
-    user = bk.get_user_by_id(session['user_id'])  
-
-    # if book is not in database, then show an 404 error page
     if not book:
         return render_template('404.html'), 404
 
-    return render_template('book_detail.html', book = book, user = user)
-    
-
-def check_if_completed_survey(user_id):
-    # Check if the user has completed the survey
+    # Check if the book is already saved
     conn = sqlite3.connect('bookSage.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT has_completed_survey FROM users WHERE id = ?', (user_id,))
-    result = cursor.fetchone()
+    cursor.execute('SELECT 1 FROM user_books WHERE user_id = ? AND isbn = ?', (user_id, isbn))
+    already_saved = cursor.fetchone() is not None
     conn.close()
-    return result[0] == 1  # Assuming 1 means the survey is completed
+
+    if request.method == 'POST' and not already_saved:
+        add_book_to_profile(user_id, isbn)
+        return redirect(url_for('book_detail', isbn=isbn))
+
+    return render_template('book_detail.html', book=book, user=user, already_saved=already_saved)
+
 @app.route('/recommendations')
 def recommendations():
     if 'user_id' not in session:

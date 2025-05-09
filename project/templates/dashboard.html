@@ -28,7 +28,7 @@
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
       
       <!-- Brand -->
-      <div class="text-2xl font-bold">BookSage</div>
+      <div class="text-4xl font-bold">BookSage</div>
   
       <!-- Main navigation -->
       <nav class="space-x-6 text-lg font-medium hidden md:flex">
@@ -44,12 +44,14 @@
           Account ▾
         </button>
   
-        <!-- Dropdown Items -->
+        <!-- Dropdown Items added the othere pages to the menu -->
         <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white text-green-800 rounded-md shadow-lg z-50">
-          <a href="{{ url_for('dashboard') }}" class="block px-4 py-2 hover:bg-green-100">Dashboard</a>
-          <a href="{{ url_for('all_books') }}" class="block px-4 py-2 hover:bg-green-100">All Books</a>
-          <a href="{{ url_for('profile') }}" class="block px-4 py-2 hover:bg-green-100">{{ user[0] }}</a>
-          <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-red-600 hover:bg-red-100">Log Out</a>
+           <a href="{{ url_for('dashboard') }}" class="block px-4 py-2 hover:bg-green-100">Dashboard</a>
+           <a href="{{ url_for('profile') }}" class="block px-4 py-2 hover:bg-green-100">Profile</a>
+           <a href="{{ url_for('all_books') }}" class="block px-4 py-2 hover:bg-green-100">All Books</a>
+           <a href="{{ url_for('survey') }}" class="block px-4 py-2 hover:bg-green-100">Update Survey</a>
+           <a href="{{ url_for('survey_review') }}" class="block px-4 py-2 hover:bg-green-100">Review Your Survey</a>
+           <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-red-600 hover:bg-red-100">Log Out</a>
         </div>
       </div>
     </div>
@@ -80,6 +82,7 @@
         </div>
     </section>
     <div id="recommendations" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"></div>
+<!--updated the part from data to "',"-->
 
 <script>
   fetch('/recommendations')
@@ -93,14 +96,23 @@
       }
 
       data.forEach(book => {
-        const card = `
-          <div class="bg-white shadow-lg rounded-2xl p-6">
-            <h3 class="text-xl font-semibold mb-2">${book.Title}</h3>
-            <p class="text-green-700"><strong>ISBN:</strong> ${book.ISBN}</p>
-            <p class="text-green-700"><strong>Published:</strong> ${book.Pubdate}</p>
-            <p class="text-green-700"><strong>Genre:</strong> ${book.Genre}</p>
-          </div>
-        `;
+  const card = `
+    <div class="bg-white shadow-lg rounded-2xl p-6">
+      <img 
+        src="https://covers.openlibrary.org/b/isbn/${book.ISBN}-M.jpg?default=false" 
+        alt="Cover for ${book.Title}" 
+        class="w-full h-64 object-cover rounded mb-4"
+        onerror="this.onerror=null; this.src='/static/img/placeholder-cover.jpg';"
+      >
+
+      <h3 class="text-xl font-semibold mb-2">
+        <a href="/book/${book.ISBN}" class="text-blue-600 hover:underline">${book.Title}</a>
+      </h3>
+      <p class="text-green-700"><strong>ISBN:</strong> ${book.ISBN}</p>
+      <p class="text-green-700"><strong>Published:</strong> ${book.Pubdate}</p>
+      <p class="text-green-700"><strong>Genre:</strong> ${book.Genre}</p>
+    </div>
+  `;
         container.innerHTML += card;
       });
     })

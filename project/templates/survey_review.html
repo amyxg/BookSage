@@ -26,7 +26,7 @@
         <a href="#" class="hover:text-green-200">Community</a>
       </nav>
   
-      <!-- Dropdown Menu -->
+      <!-- Dropdown Menu -- added the othere pages to the menu-->
       <div class="relative" x-data="{ open: false }">
         <button @click="open = !open" class="bg-white text-green-700 px-4 py-2 rounded-md font-semibold hover:bg-green-100">
           Account ▾
@@ -35,9 +35,11 @@
         <!-- Dropdown Items -->
         <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white text-green-800 rounded-md shadow-lg z-50">
           <a href="{{ url_for('dashboard') }}" class="block px-4 py-2 hover:bg-green-100">Dashboard</a>
-          <a href="{{ url_for('all_books') }}" class="block px-4 py-2 hover:bg-green-100">All Books</a>
-          <a href="{{ url_for('survey') }}" class="block px-4 py-2 hover:bg-green-100">Update Survey</a>
-          <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-red-600 hover:bg-red-100">Log Out</a>
+           <a href="{{ url_for('profile') }}" class="block px-4 py-2 hover:bg-green-100">Profile</a>
+           <a href="{{ url_for('all_books') }}" class="block px-4 py-2 hover:bg-green-100">All Books</a>
+           <a href="{{ url_for('survey') }}" class="block px-4 py-2 hover:bg-green-100">Update Survey</a>
+           <a href="{{ url_for('survey_review') }}" class="block px-4 py-2 hover:bg-green-100">Review Your Survey</a>
+           <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-red-600 hover:bg-red-100">Log Out</a>
         </div>
       </div>
     </div>
