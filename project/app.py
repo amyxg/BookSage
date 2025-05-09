@@ -37,7 +37,7 @@ def survey():
     if not user_id:
         return redirect(url_for('login'))
 
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     cursor = conn.cursor()
 
     # Check if the user already submitted the survey
@@ -95,7 +95,7 @@ def survey():
         top_books_str =', '.join(top_books)
         reading_purpose_str = ', '.join(reading_purpose)
 
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('bookSage.db')
 
         cursor = conn.cursor()
 
@@ -294,7 +294,7 @@ def recommendations():
 
     try:
         # Get user's selected genres from database.db
-        conn_user = sqlite3.connect('database.db')
+        conn_user = sqlite3.connect('bookSage.db')
         user_cursor = conn_user.cursor()
         user_cursor.execute("SELECT genres FROM survey_responses WHERE user_id = ?", (user_id,))
         row = user_cursor.fetchone()
@@ -306,7 +306,7 @@ def recommendations():
         genres = [g.strip() for g in row[0].split(',')]
 
         # Get matching books from books.db
-        conn_books = sqlite3.connect('books.db')
+        conn_books = sqlite3.connect('bookSage.db')
         books_cursor = conn_books.cursor()
         placeholders = ','.join('?' for _ in genres)
         query = f"SELECT Title, ISBN, Pubdate, Genre FROM books WHERE Genre IN ({placeholders})"
