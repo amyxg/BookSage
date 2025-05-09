@@ -48,9 +48,9 @@
   <section class="bg-green-600 text-white py-16">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mx-auto text-center">
-        <h2 class="text-4xl font-bold mb-4">Welcome, {{ user[0] }} {{ user[1] }}!</h2>
-        <p class="text-xl mb-4">Email: {{ user[2] }}</p>
-        <p class="text-lg">Here are all the books in the BookSage library:</p>
+        <h2 class="text-4xl font-bold mb-4">Welcome, {{ user['first_name'] }} {{ user['last_name'] }}!</h2>
+        <p class="text-xl mb-4">Email: {{ user['email'] }}</p>
+        <p class="text-lg">All Books in BookSage library:</p>
       </div>
     </div>
   </section>
@@ -64,10 +64,38 @@
         <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {% for book in books %}
             <div class="bg-white shadow-lg rounded-2xl p-6">
+
+              {% if book['ISBN'] %}
+              <img src="https://covers.openlibrary.org/b/isbn/{{ book['ISBN'] }}-M.jpg?default=false"
+                alt="Cover for {{ book['Title'] }}"
+                class="w-full h-64 object-cover rounded mb-4"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/placeholder-cover.jpg') }}';">
+               {% endif %}
+              <h3 class="text-xl font-semibold mb-2">
+                <a href="{{ url_for('book_detail', isbn=book['ISBN']) }}" class="text-blue-600 hover:underline">
+                  {{ book['Title'] }}
+                </a>
+              </h3>              
+              <p class="text-gray-700"><strong>Author:</strong> {{ book['Firstname'] }} {{ book['Lastname'] }}</p>
+              <p class="text-gray-700"><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
+              <p class="text-gray-700"><strong>Published:</strong> {{ book['Pubdate'] }}</p>
+              <p class="text-gray-700"><strong>Genre:</strong> {{ book['Genre'] }}</p>
+              <!-- Commented out these fields as they will show on book details page --
+              <p class="text-gray-700"><strong>Fiction/Nonfiction:</strong> {{ book['Fiction_Nonfiction'] }}</p>
+              <p class="text-gray-700"><strong>Theme:</strong> {{ book['Theme'] }}</p>
+              <p class="text-gray-700"><strong>Tone:</strong> {{ book['Tone'] }}</p>
+              <p class="text-gray-700"><strong>Length:</strong> {{ book['Book_Length'] }}</p>
+              <p class="text-gray-700"><strong>Era:</strong> {{ book['Book_Era'] }}</p>
+              <p class="text-gray-700"><strong>Narrative Perspective:</strong> {{ book['Narrative_Perspective'] }}</p>
+              <p class="text-gray-700"><strong>Format:</strong> {{ book['Book_Preference'] }}</p>
+              <p class="text-gray-700"><strong>Description:</strong> {{ book['Description'] }}</p>
+              -->
+
               <h3 class="text-xl font-semibold mb-2">{{ book['Title'] }}</h3>
               <p class="text-green-700"><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
               <p class="text-green-700"><strong>Published:</strong> {{ book['Pubdate'] }}</p>
               <p class="text-green-700"><strong>Genre:</strong> {{ book['Genre'] }}</p>
+
             </div>
           {% endfor %}
         </div>

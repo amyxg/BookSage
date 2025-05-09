@@ -18,7 +18,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('bookSage.db')
         c = conn.cursor()
         c.execute("SELECT * FROM users WHERE email = ?", (email,))
         user = c.fetchone()
@@ -63,6 +63,27 @@ def survey():
         reading_purpose = request.form.getlist('reading_purpose')
         thought_provoking = request.form.get('thought_provoking')
 
+
+        # Connect to the database and save the responses
+        conn = sqlite3.connect('bookSage.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO survey_responses (
+                user_id, reading_frequency, book_preference, discover_method, genres,
+                fiction_non_fiction, explore_genres, tone, themes, book_length, book_era,
+                narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            session['user_id'], reading_frequency, book_preference, discover_method, ', '.join(genres),
+            fiction_non_fiction, explore_genres, tone, ', '.join(themes), book_length, book_era,
+            narrative_perspective, favorite_authors, top_books, reading_purpose, thought_provoking
+        ))
+        conn.commit()
+        conn.close()
+
+        # Update the user table to mark that the survey is completed
+        conn = sqlite3.connect('bookSage.db')
+
         # Format the multi-select fields as comma-separated strings
         genres_str = ', '.join(genres)
         themes_str = ', '.join(themes)
@@ -75,6 +96,7 @@ def survey():
         reading_purpose_str = ', '.join(reading_purpose)
 
         conn = sqlite3.connect('database.db')
+
         cursor = conn.cursor()
 
         if existing_response:
@@ -123,7 +145,7 @@ def survey_review():
     user_id = session['user_id']  # Replace with actual method to get the user_id
     
     # Fetch the survey responses for the current user
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     conn.row_factory = sqlite3.Row  # This allows us to access columns by name
     cursor = conn.cursor()
 
@@ -147,7 +169,7 @@ def register():
         confirm_password = request.form['confirm_password']
         if password == confirm_password:
             hashed_password = generate_password_hash(password, method='scrypt')
-            conn = sqlite3.connect('database.db')
+            conn = sqlite3.connect('bookSage.db')
             c = conn.cursor()
             try:
                 c.execute("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
@@ -170,7 +192,7 @@ def register():
 def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     c = conn.cursor()
     c.execute("SELECT first_name, last_name, email FROM users WHERE id = ?", (session['user_id'],))
     user = c.fetchone()
@@ -187,7 +209,7 @@ def dashboard():
         return redirect(url_for('login'))
 
     # Fetch the user details from the database
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     cursor = conn.cursor()
     cursor.execute('SELECT first_name, last_name FROM users WHERE id = ?', (user_id,))
     user = cursor.fetchone()
@@ -207,28 +229,57 @@ def dashboard():
 # display all books in database
 @app.route('/allbooks')
 def all_books():
-    # make sure user is logged in first
 
+    # make sure user is logged in first
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
     if 'db' not in g:
-        # connect to books database
+        # connect to bookSage database
         db = bk.db_connection()
+
     # query Books table to display info on books
     books = bk.query_table(db)
+    
+    # store user info in session
+    # user = session.get('user')
 
-    # store user info in session (or fetch from DB?)
-    user = session.get('user')
+    # call function to get user's id to display on web page
+    user = bk.get_user_by_id(session['user_id'])  
 
     return render_template('allbooks.html', books = books, user = user)
-    
-    
 
+# displays full details about one single book
+@app.route('/book/<isbn>')    
+def book_detail(isbn):   
+
+    # make sure user is logged in first
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    if 'db' not in g:
+        # connect to bookSage database
+        connection = bk.db_connection()
+    
+    # query DB tables to show all detail about one book
+    book = bk.get_book_by_isbn(connection, isbn)
+
+    # store user info in session
+    # user = session.get('user')
+
+    # call function to get user's id to display on web page
+    user = bk.get_user_by_id(session['user_id'])  
+
+    # if book is not in database, then show an 404 error page
+    if not book:
+        return render_template('404.html'), 404
+
+    return render_template('book_detail.html', book = book, user = user)
+    
 
 def check_if_completed_survey(user_id):
     # Check if the user has completed the survey
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     cursor = conn.cursor()
     cursor.execute('SELECT has_completed_survey FROM users WHERE id = ?', (user_id,))
     result = cursor.fetchone()

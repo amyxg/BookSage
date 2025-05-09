@@ -2,7 +2,7 @@ import sqlite3
 
 def init_db():
     # is_new_user is to Check if the user is new
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('bookSage.db')
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS users (

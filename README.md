@@ -9,7 +9,7 @@ BookSage is a platform that provides personalized book recommendations based on 
 - **User Ratings**: Books are rated by users, ensuring quality suggestions.
 - **Trending Content**: Discover the most liked books within the community. (social media and reviews per user profile) 
 - **Account Page**: User's personalized page with username, email, profile photo.
-- **Registeration**: Ability for a user to register to join website; required username, email, password, and confirm password verification.
+- **Registration**: Ability for a user to register to join website; required username, email, password, and confirm password verification.
 - **Viewing Book Details**: When a user clicks on a book from the search results or a popular books list, they will be taken to a detailed book page
 - **Admin Panel**: An admin panel for managing books, users, and reviews.
 - **Email Notifications**:  Implementing email notifications for users (e.g.,confirming registration, new book recommendations).

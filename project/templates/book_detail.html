@@ -1,0 +1,79 @@
+<!-- Book Details page-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">BookSage</h1>
+                <nav class="hidden md:flex space-x-6">
+                    <!--a href="#" class="hover:text-blue-200">Home</a>-->
+                    <a href="{{ url_for('index') }}" class="hover:text-blue-200">Home</a> <!--that was added or modify-->
+                    <a href="#" class="hover:text-blue-200">Browse</a>
+                    <a href="#" class="hover:text-blue-200">My Books</a>
+                    <a href="#" class="hover:text-blue-200">Community</a>
+                    <a href="{{ url_for('survey') }}" class="hover:text-blue-200">Survey</a> <!--that was added or modify-->
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('dashboard') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Dashboard</a>
+                    <a href="{{ url_for('all_books') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">All Books</a>
+                    <a href="{{ url_for('survey') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Survey</a><!--that was added or modify-->
+                    <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Section -->
+    <section class="bg-blue-700 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-4xl font-bold mb-4">Welcome, {{ user['first_name'] }} {{ user['last_name'] }}!</h2>
+                <p class="text-xl mb-4">Email: {{ user['email'] }}</p>
+                <p class="text-lg">Book Details</p>
+                <a href="{{ url_for('all_books') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50">Back to All Books</a>
+            </div>
+        </div>
+    </section>
+
+      <!-- Book Cards -->
+  <section class="py-10">
+    <div class="container mx-auto px-4">
+      {% block content %}
+  <div class="container mx-auto px-4 py-10">
+    {% if book %}
+     {% if book['ISBN'] %}
+        <img src="https://covers.openlibrary.org/b/isbn/{{ book['ISBN'] }}-M.jpg?default=false"
+          alt="Cover for {{ book['Title'] }}"
+          class="w-48 h-auto mb-6 rounded shadow mx-auto"
+          onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/placeholder-cover.jpg') }}';">
+      {% endif %}
+      <h2 class="text-3xl font-bold mb-4">{{ book['Title'] }}</h2>
+      <p><strong>Author:</strong> {{ book['Firstname'] }} {{ book['Lastname'] }}</p>
+      <p><strong>ISBN:</strong> {{ book['ISBN'] }}</p>
+      <p><strong>Publication Date:</strong> {{ book['Pubdate'] }}</p>
+      <p><strong>Genre:</strong> {{ book['Genre'] }}</p>
+      <p><strong>Fiction/Nonfiction:</strong> {{ book['Fiction_Nonfiction'] }}</p>
+      <p><strong>Theme:</strong> {{ book['Theme'] }}</p>
+      <p><strong>Tone:</strong> {{ book['Tone'] }}</p>
+      <p><strong>Length:</strong> {{ book['Book_Length'] }}</p>
+      <p><strong>Era:</strong> {{ book['Book_Era'] }}</p>
+      <p><strong>Narrative Perspective:</strong> {{ book['Narrative_Perspective'] }}</p>
+      <p><strong>Format:</strong> {{ book['Book_Preference'] }}</p>
+      <p><strong>Description:</strong> {{ book['Description'] }}</p>
+    {% else %}
+      <p class="text-red-600 text-xl font-semibold">Book not found in database.</p>
+    {% endif %}
+  </div>
+{% endblock %}
+    </div>
+  </section>
+</body>
+</html>
