@@ -1,5 +1,4 @@
 import sqlite3 , books as bk
-# Note: Took out models - need to add it back in?
 from flask import Flask, render_template, request, redirect, url_for, flash, session, g,jsonify # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
@@ -238,9 +237,7 @@ def all_books():
 
     # query Books table to display info on books
     books = bk.query_table(db)
-    
-    # store user info in session
-    # user = session.get('user')
+
 
     # call function to get user's id to display on web page
     user = bk.get_user_by_id(session['user_id'])  
