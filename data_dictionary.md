@@ -75,6 +75,16 @@ Stores users' responses to the reading preference survey.
 | reading_purpose | TEXT | | User's primary purpose for reading |
 | thought_provoking | TEXT | | Whether the user prefers thought-provoking content |
 
+### user_books
+Stores information about user's saved books.
+
+| Column | Data Type | Constraints | Description |
+|--------|-----------|-------------|-------------|
+| id | INTEGER | Primary Key, AUTOINCREMENT | Id for user’s book preferences |
+| user_id | INTEGER | | User's id |
+| isbn | TEXT | | Reference to a book's ISBN |
+| saved_at | Datetime, Default Current_timestamp | | Time and Date of saved user’s preferences |
+
 ### sqlite_sequence
 System table used by SQLite to keep track of the last used AUTOINCREMENT value for each table.
 
